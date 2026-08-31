@@ -6,14 +6,26 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(cors());
+// CORS - Allow Vercel frontend
+app.use(cors({
+origin: "https://student-management-system-rose-theta.vercel.app",
+methods: ["GET", "POST", "DELETE"],
+allowedHeaders: ["Content-Type"]
+}));
+
 app.use(express.json());
 
+// Aiven MySQL Database Connection
 const db = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
+  host: process.env.MYSQLHOST,
+  port: process.env.MYSQLPORT,
+  user: process.env.MYSQLUSER,
+  password: process.env.MYSQLPASSWORD,
+  database: process.env.MYSQLDATABASE,
+
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
 db.connect((err) => {
@@ -31,7 +43,6 @@ res.send("Server is running!");
 });
 
 // REGISTER USER
-
 app.post("/register", async (req, res) => {
 const { name, email, password } = req.body;
 
@@ -40,13 +51,12 @@ db.query(
 "SELECT * FROM users WHERE email = ?",
 [email],
 async (err, results) => {
+if (err) {
+return res.status(500).json({
+message: "Database error"
+});
+}
 
-
-    if (err) {
-      return res.status(500).json({
-        message: "Database error"
-      });
-    }
 
     if (results.length > 0) {
       return res.status(400).json({
@@ -60,7 +70,6 @@ async (err, results) => {
       "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
       [name, email, passwordHash],
       (err, result) => {
-
         if (err) {
           return res.status(500).json({
             message: "Could not register user"
@@ -79,15 +88,16 @@ async (err, results) => {
 } catch (error) {
 console.log(error);
 
+
 res.status(500).json({
   message: "Server error"
 });
+
 
 }
 });
 
 // LOGIN USER
-
 app.post("/login", (req, res) => {
 const { email, password } = req.body;
 
@@ -95,12 +105,12 @@ db.query(
 "SELECT * FROM users WHERE email = ?",
 [email],
 async (err, results) => {
+if (err) {
+return res.status(500).json({
+message: "Database error"
+});
+}
 
-  if (err) {
-    return res.status(500).json({
-      message: "Database error"
-    });
-  }
 
   if (results.length === 0) {
     return res.status(401).json({
@@ -137,9 +147,7 @@ async (err, results) => {
 });
 
 // SAVE GPA AND ALL SUBJECT GRADES
-
 app.post("/save-result", (req, res) => {
-
 const {
 userId,
 totalGPA,
@@ -170,11 +178,10 @@ totalGPA,
 performanceLevel
 ],
 (error, result) => {
+if (error) {
+console.log("Error saving GPA:");
+console.log(error);
 
-
-  if (error) {
-    console.log("Error saving GPA:");
-    console.log(error);
 
     return res.status(500).json({
       message: "Failed to save GPA result"
@@ -197,7 +204,6 @@ performanceLevel
     subjectSql,
     [subjectValues],
     (error) => {
-
       if (error) {
         console.log("Error saving subject grades:");
         console.log(error);
@@ -219,17 +225,14 @@ performanceLevel
 });
 
 // ADMIN: GET ALL USERS
-
 app.get("/admin/users", (req, res) => {
-
 const sql =
 "SELECT id, name, email, created_at, is_admin FROM users WHERE is_admin = 0";
 
 db.query(sql, (error, users) => {
-
-
 if (error) {
-  console.log(error);
+console.log(error);
+
 
   return res.status(500).json({
     message: "Could not get users"
@@ -238,25 +241,21 @@ if (error) {
 
 res.json(users);
 
-
 });
 });
 
 // ADMIN: GET USER DETAILS
-
 app.get("/admin/user/:id", (req, res) => {
-
 const userId = req.params.id;
 
 const userSql =
 "SELECT id, name, email, created_at FROM users WHERE id = ?";
 
 db.query(userSql, [userId], (error, users) => {
-
 if (error) {
-  return res.status(500).json({
-    message: "Database error"
-  });
+return res.status(500).json({
+message: "Database error"
+});
 }
 
 if (users.length === 0) {
@@ -269,7 +268,6 @@ const resultSql =
   "SELECT id, total_gpa, performance_level, created_at FROM results WHERE user_id = ?";
 
 db.query(resultSql, [userId], (error, results) => {
-
   if (error) {
     return res.status(500).json({
       message: "Could not get GPA results"
@@ -282,27 +280,23 @@ db.query(resultSql, [userId], (error, results) => {
   });
 });
 
-
 });
 });
 
 // ADMIN: GET SUBJECT GRADES
-
 app.get("/admin/result/:resultId/grades", (req, res) => {
-
 const resultId = req.params.resultId;
 
 const sql =
 "SELECT subject_name, grade, credit_hours FROM subject_grades WHERE result_id = ?";
 
 db.query(sql, [resultId], (error, grades) => {
-
-
 if (error) {
-  return res.status(500).json({
-    message: "Could not get subject grades"
-  });
+return res.status(500).json({
+message: "Could not get subject grades"
+});
 }
+
 
 res.json(grades);
 
@@ -310,19 +304,15 @@ res.json(grades);
 });
 
 // ADMIN: DELETE USER
-
 app.delete("/admin/user/:id", (req, res) => {
-
 const userId = req.params.id;
 
 const sql =
 "DELETE FROM users WHERE id = ?";
 
 db.query(sql, [userId], (error, result) => {
-
-
 if (error) {
-  console.log(error);
+console.log(error);
 
   return res.status(500).json({
     message: "Could not delete user"
@@ -339,13 +329,13 @@ res.json({
   message: "User and all academic data deleted successfully"
 });
 
+
 });
 });
 
 // START SERVER
-
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
+console.log("Server running on port " + PORT);
 });
