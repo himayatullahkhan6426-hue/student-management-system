@@ -3,7 +3,7 @@ import SubjectRow from "./SubjectRow";
 import ResultCard from "./ResultCard";
 
 const API_URL =
-  "https://student-management-system-production-4448.up.railway.app";
+  "https://student-management-system-d4cj.onrender.com";
 
 function GPACalculator({ user }) {
   const [grades, setGrades] = useState({

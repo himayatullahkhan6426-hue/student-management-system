@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 const API_URL =
-  "https://student-management-system-production-4448.up.railway.app";
+  "https://student-management-system-d4cj.onrender.com";
 
 function AdminDashboard({ setPage, setUser }) {
   const [users, setUsers] = useState([]);

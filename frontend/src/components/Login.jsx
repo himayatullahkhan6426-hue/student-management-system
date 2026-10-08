@@ -2,7 +2,7 @@ import { useState } from "react";
 import AuthTabs from "./AuthTabs";
 
 const API_URL =
-  "https://student-management-system-production-4448.up.railway.app";
+  "https://student-management-system-d4cj.onrender.com";
 
 function Login({ setPage, setUser }) {
   const [email, setEmail] = useState("");
