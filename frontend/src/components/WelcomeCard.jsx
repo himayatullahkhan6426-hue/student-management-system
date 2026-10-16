@@ -4,14 +4,14 @@ function WelcomeCard({ studentInfo, latestCGPA, totalCredits, totalSemesters, on
   return (
     <section className="welcome-card no-print">
       <div className="welcome-content">
-        <span className="welcome-label">ACADEMIC TRANSCRIPT & GPA SYSTEM</span>
+        <span className="welcome-label">STUDENT MANAGEMENT SYSTEM</span>
 
         <h1>
           Welcome, {studentInfo.studentName || "Student"}! 🎓
         </h1>
 
         <p className="welcome-subtitle">
-          {studentInfo.program || "BS Software Engineering"} • Reg: {studentInfo.registrationNo || "24PWSWE0006"}
+          {studentInfo.program || "Engineering And Computer Science"} • Reg: {studentInfo.registrationNo || ""}
         </p>
 
         <div className="welcome-stats-row">

@@ -34,7 +34,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.studentName || ""}
               onChange={(e) => handleChange("studentName", e.target.value)}
-              placeholder="e.g. Himayat Ullah Khan"
             />
           </div>
 
@@ -45,7 +44,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.fatherName || ""}
               onChange={(e) => handleChange("fatherName", e.target.value)}
-              placeholder="e.g. Yar Muhammad Khan"
             />
           </div>
 
@@ -56,7 +54,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.registrationNo || ""}
               onChange={(e) => handleChange("registrationNo", e.target.value)}
-              placeholder="e.g. 24PWSWE0006"
             />
           </div>
 
@@ -67,7 +64,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.program || ""}
               onChange={(e) => handleChange("program", e.target.value)}
-              placeholder="e.g. BS Software Engineering"
             />
           </div>
 
@@ -78,7 +74,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.plan || ""}
               onChange={(e) => handleChange("plan", e.target.value)}
-              placeholder="e.g. BS Software Engineering Major"
             />
           </div>
         </div>
@@ -94,7 +89,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.universityName || ""}
               onChange={(e) => handleChange("universityName", e.target.value)}
-              placeholder="e.g. University of Engineering & Technology"
             />
           </div>
 
@@ -105,7 +99,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.universityLocation || ""}
               onChange={(e) => handleChange("universityLocation", e.target.value)}
-              placeholder="e.g. Peshawar, Pakistan"
             />
           </div>
 
@@ -116,7 +109,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.issueDate || ""}
               onChange={(e) => handleChange("issueDate", e.target.value)}
-              placeholder="e.g. 09/22/2026"
             />
           </div>
 
@@ -127,7 +119,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.resultDeclarationDate || ""}
               onChange={(e) => handleChange("resultDeclarationDate", e.target.value)}
-              placeholder="e.g. 09/15/2026"
             />
           </div>
 
@@ -138,7 +129,6 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               className="text-input"
               value={studentInfo.controllerTitle || ""}
               onChange={(e) => handleChange("controllerTitle", e.target.value)}
-              placeholder="e.g. Controller of Examinations"
             />
           </div>
         </div>

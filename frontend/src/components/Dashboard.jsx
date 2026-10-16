@@ -58,25 +58,18 @@ function Dashboard({ user, handleLogout }) {
         console.error("Failed to parse saved student info", e);
       }
     }
-    // If user is Himayat, use sample transcript
-    if (user?.email === "24PWSWE0006@gmail.com" || user?.id === 2) {
-      return {
-        ...SAMPLE_TRANSCRIPT.studentInfo,
-        studentName: user?.name || SAMPLE_TRANSCRIPT.studentInfo.studentName,
-      };
-    }
     // For every other student, initialize their own clean record
     return {
       studentName: user?.name || "",
       fatherName: "",
       registrationNo: extractRegNo(user?.email) || "",
-      program: "BS Software Engineering",
-      plan: "BS Software Engineering Major",
-      universityName: "University of Engineering & Technology",
-      universityLocation: "Peshawar, Pakistan",
-      department: "se",
-      issueDate: "09/22/2026",
-      resultDeclarationDate: "09/15/2026",
+      program: "",
+      plan: "",
+      universityName: "",
+      universityLocation: "",
+      department: "",
+      issueDate: "__/__/202__",
+      resultDeclarationDate: "__/__/202__",
       preparedBy: "",
       checkedBy: "",
       controllerTitle: "Controller of Examinations",
@@ -93,19 +86,16 @@ function Dashboard({ user, handleLogout }) {
         console.error("Failed to parse saved semesters", e);
       }
     }
-    if (user?.email === "24PWSWE0006@gmail.com" || user?.id === 2) {
-      return SAMPLE_TRANSCRIPT.semesters;
-    }
     return [
       {
         id: "sem-1",
         name: "Semester 1",
         subjects: [
-          { id: "sub-1", code: "SE 101", title: "Information & Comm Technologies", credits: 2.0, grade: "A" },
-          { id: "sub-2", code: "SE 101L", title: "ICT Lab", credits: 1.0, grade: "A" },
-          { id: "sub-3", code: "SE 102", title: "Computer Programming", credits: 3.0, grade: "A" },
-          { id: "sub-4", code: "BSI 101", title: "Islamic Studies", credits: 2.0, grade: "A" },
-          { id: "sub-5", code: "BSI 173", title: "Calculus & Analytic Geometry", credits: 3.0, grade: "A" },
+          { id: "sub-1", code: "SE 101", title: "Information & Comm Technologies", credits: 2.0, grade: "" },
+          { id: "sub-2", code: "SE 101L", title: "ICT Lab", credits: 1.0, grade: "" },
+          { id: "sub-3", code: "SE 102", title: "Computer Programming", credits: 3.0, grade: "" },
+          { id: "sub-4", code: "BSI 101", title: "Islamic Studies", credits: 2.0, grade: "" },
+          { id: "sub-5", code: "BSI 173", title: "Calculus & Analytic Geometry", credits: 3.0, grade: "" },
         ],
       },
     ];
@@ -203,11 +193,10 @@ function Dashboard({ user, handleLogout }) {
   const handleLoadSample = () => {
     if (
       window.confirm(
-        "Load Himayat Ullah Khan's actual 4-Semester Transcript record (Fall 2024 to Spring 2026)?"
+        "Load actual 4-Semester Transcript record of Software Engineering?"
       )
     ) {
       setRawSemesters(SAMPLE_TRANSCRIPT.semesters);
-      setStudentInfo(SAMPLE_TRANSCRIPT.studentInfo);
       setActiveTab("transcript");
     }
   };
@@ -333,7 +322,7 @@ function Dashboard({ user, handleLogout }) {
       const result = await res.json();
       if (res.ok) {
         setCloudStatus("Saved to DB ✓");
-        alert("Success! Your personal academic transcript has been saved to the MySQL database.");
+        alert("Success! Your personal academic transcript has been saved to database.");
       } else {
         setCloudStatus("Save Failed");
         alert("Error saving: " + (result.message || "Failed to save"));
@@ -388,9 +377,6 @@ function Dashboard({ user, handleLogout }) {
           <div className="transcript-tab-content">
             {/* Quick Actions Helper */}
             <div className="helper-banner Box no-print">
-              <div className="helper-text">
-                <strong>📄 Official UET Peshawar Transcript:</strong> 100% formatted to the examination branch transcript. Click <em>"Print / Save as PDF"</em> to generate an authentic laser-crisp paper copy.
-              </div>
               <div className="helper-actions">
                 <button
                   type="button"
@@ -406,7 +392,7 @@ function Dashboard({ user, handleLogout }) {
                   type="button"
                   className="action-btn secondary-btn small"
                   onClick={handleLoadFull8Semesters}
-                  title="Load full 8-semester Software Engineering scheme from screenshots"
+                  title="Load full 8-semester Software Engineering scheme"
                 >
                   🎓 Load Full 8-Sem Scheme
                 </button>
@@ -416,15 +402,16 @@ function Dashboard({ user, handleLogout }) {
                   onClick={handleLoadSample}
                   title="Load actual 4-semester transcript from photo"
                 >
-                  📋 Load Himayat's 4-Sem Sample
+                  📋 Load 4-Semesters
                 </button>
-                <button
-                  type="button"
-                  className="action-btn primary-btn small"
-                  onClick={handlePrint}
-                >
-                  🖨️ Print / Save PDF
-                </button>
+          <button
+            type="button"
+            className="action-btn print-btn"
+            onClick={handlePrint}
+            title="Open print dialog to print or save as PDF"
+          >
+            Print / Save as PDF
+          </button>
               </div>
             </div>
 

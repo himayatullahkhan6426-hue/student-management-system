@@ -19,7 +19,7 @@ function Header({
           <span>🎓</span>
         </div>
         <div>
-          <h2>UET Academic & Transcript Portal</h2>
+          <h2>Academic & Transcript Portal</h2>
           <div className="brand-dept-tag" onClick={onOpenDeptModal} title="Click to change academic department">
             <span>{currentDepartment?.name || "Software Engineering"}</span>
             <small>▼</small>

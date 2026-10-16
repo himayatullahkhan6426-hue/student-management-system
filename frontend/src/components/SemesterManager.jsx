@@ -181,9 +181,9 @@ function SemesterManager({
             type="button"
             className="action-btn secondary-btn"
             onClick={onLoadSample}
-            title="Load Fall 2024 to Spring 2026 actual transcript"
+            title="Load Four semesters of software engineering"
           >
-            📋 Load Himayat's 4-Sem Sample
+            📋 Load First 4-Sem Schema
           </button>
           <button
             type="button"

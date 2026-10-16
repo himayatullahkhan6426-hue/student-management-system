@@ -16,13 +16,8 @@ function TranscriptView({ studentInfo, semesters, onPrint }) {
     <div className="transcript-wrapper">
       {/* Action Bar (Hidden during print) */}
       <div className="transcript-toolbar no-print">
-        <div className="toolbar-info">
-          <span className="badge-official">100% Verified UET Format</span>
-          <span className="toolbar-sub">Identical to Official Examination Transcript</span>
-        </div>
         <div className="toolbar-actions">
           <div className="layout-toggle-group">
-            <span className="toggle-lbl">Format:</span>
             <button
               type="button"
               className={`layout-pill-btn ${layoutMode === "exact" ? "active" : ""}`}
@@ -40,20 +35,6 @@ function TranscriptView({ studentInfo, semesters, onPrint }) {
               Full Page Width
             </button>
           </div>
-
-          <button
-            type="button"
-            className="action-btn print-btn"
-            onClick={handlePrint}
-            title="Open print dialog to print or save as PDF"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="6 9 6 2 18 2 18 9"></polyline>
-              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
-              <rect x="6" y="14" width="12" height="8"></rect>
-            </svg>
-            Print / Save as PDF
-          </button>
         </div>
       </div>
 
@@ -71,7 +52,7 @@ function TranscriptView({ studentInfo, semesters, onPrint }) {
 
             <div className="uet-reg-no-line">
               <span className="uet-reg-label">Registration No:</span>
-              <span className="uet-reg-val">{studentInfo.registrationNo || "24PWSWE0006"}</span>
+              <span className="uet-reg-val">{studentInfo.registrationNo || "No Data"}</span>
             </div>
           </header>
 
@@ -91,25 +72,25 @@ function TranscriptView({ studentInfo, semesters, onPrint }) {
             <div className="uet-meta-line row-1">
               <div className="meta-col-left">
                 <span className="lbl">Student's Name:</span>
-                <span className="val">{studentInfo.studentName || "Himayat Ullah Khan"}</span>
+                <span className="val">{studentInfo.studentName || "No Data"}</span>
               </div>
               <div className="meta-col-right">
                 <span className="lbl">Father's Name:</span>
-                <span className="val">{studentInfo.fatherName || "Yar Muhammad Khan"}</span>
+                <span className="val">{studentInfo.fatherName || "No Data"}</span>
               </div>
             </div>
 
             <div className="uet-meta-line row-2">
               <div className="meta-col-left">
                 <span className="lbl">Program:</span>
-                <span className="val">{studentInfo.program || "BS Software Engineering"}</span>
+                <span className="val">{studentInfo.program || "No Data"}</span>
               </div>
             </div>
 
             <div className="uet-meta-line row-3">
               <div className="meta-col-left">
                 <span className="lbl">Plan:</span>
-                <span className="val">{studentInfo.plan || "BS Software Engineering Major"}</span>
+                <span className="val">{studentInfo.plan || "No Data"}</span>
               </div>
             </div>
           </div>
