@@ -8,9 +8,14 @@ const app = express();
 
 // CORS - Allow Vercel frontend
 app.use(cors({
-origin: "https://student-management-system-rose-theta.vercel.app",
-methods: ["GET", "POST", "DELETE"],
-allowedHeaders: ["Content-Type"]
+origin: [
+  "https://student-management-system-rose-theta.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://127.0.0.1:5173"
+],
+methods: ["GET", "POST", "DELETE", "PUT"],
+allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
@@ -160,7 +165,8 @@ if (
 !totalGPA ||
 !performanceLevel ||
 !subjects ||
-subjects.length !== 9
+!Array.isArray(subjects) ||
+subjects.length === 0
 ) {
 return res.status(400).json({
 message: "Invalid result data"

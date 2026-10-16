@@ -1,25 +1,92 @@
-function Header({ handleLogout }) {
-return ( <header className="dashboard-header"> <div className="brand"> <div className="brand-icon">
-G </div>
+import React from "react";
 
-    <div>
-      <h2>GPA Calculator</h2>
+function Header({
+  activeTab,
+  setActiveTab,
+  handleLogout,
+  onPrint,
+  currentDepartment,
+  onOpenDeptModal,
+}) {
+  return (
+    <header className="dashboard-header no-print">
+      <div className="brand">
+        <div className="brand-icon">
+          <span>🎓</span>
+        </div>
+        <div>
+          <h2>UET Academic & Transcript Portal</h2>
+          <div className="brand-dept-tag" onClick={onOpenDeptModal} title="Click to change academic department">
+            <span>{currentDepartment?.name || "Software Engineering"}</span>
+            <small>▼</small>
+          </div>
+        </div>
+      </div>
 
-      <p>
-        Student Academic Dashboard
-      </p>
-    </div>
-  </div>
+      <nav className="header-nav-tabs">
+        <button
+          type="button"
+          className={`nav-tab-item ${activeTab === "transcript" ? "active" : ""}`}
+          onClick={() => setActiveTab("transcript")}
+        >
+          📄 Transcript Preview
+        </button>
+        <button
+          type="button"
+          className={`nav-tab-item ${activeTab === "semesters" ? "active" : ""}`}
+          onClick={() => setActiveTab("semesters")}
+        >
+          📝 Semesters & Subjects
+        </button>
+        <button
+          type="button"
+          className={`nav-tab-item ${activeTab === "scheme" ? "active" : ""}`}
+          onClick={() => setActiveTab("scheme")}
+        >
+          📚 Scheme of Studies (8 Sem)
+        </button>
+        <button
+          type="button"
+          className={`nav-tab-item ${activeTab === "planner" ? "active" : ""}`}
+          onClick={() => setActiveTab("planner")}
+        >
+          🎯 Target CGPA Forecaster
+        </button>
+        <button
+          type="button"
+          className={`nav-tab-item ${activeTab === "profile" ? "active" : ""}`}
+          onClick={() => setActiveTab("profile")}
+        >
+          👤 Student Profile
+        </button>
+        <button
+          type="button"
+          className={`nav-tab-item ${activeTab === "analytics" ? "active" : ""}`}
+          onClick={() => setActiveTab("analytics")}
+        >
+          📊 Analytics
+        </button>
+      </nav>
 
-  <button
-    className="logout-btn"
-    onClick={handleLogout}
-  >
-    Logout
-  </button>
-</header>
-
-);
+      <div className="header-right-actions">
+        <button
+          type="button"
+          className="print-nav-btn"
+          onClick={onPrint}
+          title="Print or Save official PDF"
+        >
+          🖨️ Print PDF
+        </button>
+        <button
+          type="button"
+          className="logout-btn"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
+    </header>
+  );
 }
 
 export default Header;

@@ -139,6 +139,26 @@ function Login({ setPage, setUser }) {
           >
             Login to Dashboard →
           </button>
+
+          <div className="demo-login-divider">
+            <span>OR</span>
+          </div>
+
+          <button
+            type="button"
+            className="demo-access-btn"
+            onClick={() => {
+              setUser({
+                id: "demo-user",
+                name: "Himayat Ullah Khan",
+                email: "himayat@uet.edu.pk",
+                is_admin: 0,
+              });
+              setPage("software");
+            }}
+          >
+            🎓 Open Transcript & GPA Portal (Direct Demo)
+          </button>
         </form>
 
         {message && (
