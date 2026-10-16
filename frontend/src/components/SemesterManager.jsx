@@ -10,6 +10,8 @@ function SemesterManager({
   onReset,
   currentDepartment,
   onOpenDeptModal,
+  onSaveToCloud,
+  isSaving,
 }) {
   const [newSemesterName, setNewSemesterName] = useState("");
   const [showAddSemesterModal, setShowAddSemesterModal] = useState(false);
@@ -181,7 +183,7 @@ function SemesterManager({
             onClick={onLoadSample}
             title="Load Fall 2024 to Spring 2026 actual transcript"
           >
-            📋 Load 4-Sem Actual Transcript
+            📋 Load Himayat's 4-Sem Sample
           </button>
           <button
             type="button"
@@ -191,6 +193,18 @@ function SemesterManager({
           >
             🎓 Load Full 8-Sem Scheme
           </button>
+          {onSaveToCloud && (
+            <button
+              type="button"
+              className="action-btn success-btn"
+              onClick={onSaveToCloud}
+              disabled={isSaving}
+              style={{ background: "#10b981", color: "#fff", fontWeight: "700" }}
+              title="Save your semesters and subjects to the database"
+            >
+              {isSaving ? "⏳ Saving..." : "💾 Save to Database"}
+            </button>
+          )}
           <button
             type="button"
             className="action-btn secondary-btn"

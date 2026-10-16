@@ -230,6 +230,72 @@ console.log(error);
 );
 });
 
+// GET INDIVIDUAL STUDENT TRANSCRIPT
+app.get("/transcript/:userId", (req, res) => {
+  const userId = req.params.userId;
+  const sql = "SELECT * FROM student_transcripts WHERE user_id = ?";
+  db.query(sql, [userId], (err, results) => {
+    if (err) {
+      console.error("Error fetching student transcript:", err);
+      return res.status(500).json({ message: "Database error fetching transcript" });
+    }
+    if (results.length === 0) {
+      return res.json({ exists: false });
+    }
+    const row = results[0];
+    let studentInfo = row.student_info;
+    let semestersData = row.semesters_data;
+    if (typeof studentInfo === "string") {
+      try { studentInfo = JSON.parse(studentInfo); } catch (e) {}
+    }
+    if (typeof semestersData === "string") {
+      try { semestersData = JSON.parse(semestersData); } catch (e) {}
+    }
+    return res.json({
+      exists: true,
+      studentInfo,
+      semesters: semestersData,
+      cgpa: row.cgpa,
+      totalCredits: row.total_credits,
+      updatedAt: row.updated_at,
+    });
+  });
+});
+
+// SAVE / UPDATE INDIVIDUAL STUDENT TRANSCRIPT
+app.post("/transcript/save", (req, res) => {
+  const { userId, studentInfo, semesters, cgpa, totalCredits } = req.body;
+  if (!userId || !semesters) {
+    return res.status(400).json({ message: "User ID and semester data are required" });
+  }
+
+  const studentInfoJson = JSON.stringify(studentInfo || {});
+  const semestersJson = JSON.stringify(semesters);
+
+  const sql = `
+    INSERT INTO student_transcripts (user_id, student_info, semesters_data, cgpa, total_credits)
+    VALUES (?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      student_info = VALUES(student_info),
+      semesters_data = VALUES(semesters_data),
+      cgpa = VALUES(cgpa),
+      total_credits = VALUES(total_credits),
+      updated_at = CURRENT_TIMESTAMP
+  `;
+
+  db.query(
+    sql,
+    [userId, studentInfoJson, semestersJson, cgpa || 0.0, totalCredits || 0.0],
+    (err, result) => {
+      if (err) {
+        console.error("Error saving transcript:", err);
+        return res.status(500).json({ message: "Failed to save transcript to database" });
+      }
+      return res.json({ message: "Transcript saved successfully!" });
+    }
+  );
+});
+
 // ADMIN: GET ALL USERS
 app.get("/admin/users", (req, res) => {
 const sql =
@@ -280,9 +346,29 @@ db.query(resultSql, [userId], (error, results) => {
     });
   }
 
-  res.json({
-    user: users[0],
-    results: results
+  const transcriptSql = "SELECT * FROM student_transcripts WHERE user_id = ?";
+  db.query(transcriptSql, [userId], (error, transcriptRows) => {
+    let transcript = null;
+    if (transcriptRows && transcriptRows.length > 0) {
+      const t = transcriptRows[0];
+      let sInfo = t.student_info;
+      let sData = t.semesters_data;
+      try { if (typeof sInfo === "string") sInfo = JSON.parse(sInfo); } catch (e) {}
+      try { if (typeof sData === "string") sData = JSON.parse(sData); } catch (e) {}
+      transcript = {
+        studentInfo: sInfo,
+        semesters: sData,
+        cgpa: t.cgpa,
+        totalCredits: t.total_credits,
+        updatedAt: t.updated_at
+      };
+    }
+
+    res.json({
+      user: users[0],
+      results: results,
+      transcript: transcript
+    });
   });
 });
 

@@ -15,13 +15,28 @@ import {
 } from "../utils/gradeCalculations";
 import { DEPARTMENTS, createSemestersFromScheme, SOFTWARE_ENGINEERING_SCHEME } from "../utils/departmentSchemes";
 
-const STORAGE_KEY_SEMESTERS = "uet_transcript_semesters_v2";
-const STORAGE_KEY_STUDENT = "uet_transcript_student_v2";
-const STORAGE_KEY_DEPT = "uet_transcript_dept_v2";
+const API_URL = "https://student-management-system-d4cj.onrender.com";
+
+function extractRegNo(email) {
+  if (!email) return "";
+  const prefix = email.split("@")[0].toUpperCase();
+  if (/^[0-9]{2}[A-Z]{3,5}[0-9]{2,5}$/i.test(prefix)) {
+    return prefix;
+  }
+  return "";
+}
 
 function Dashboard({ user, handleLogout }) {
   const [activeTab, setActiveTab] = useState("transcript");
   const [showDeptModal, setShowDeptModal] = useState(false);
+  const [cloudStatus, setCloudStatus] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  // User-isolated storage keys
+  const userId = user?.id || "guest";
+  const STORAGE_KEY_SEMESTERS = `uet_transcript_semesters_${userId}`;
+  const STORAGE_KEY_STUDENT = `uet_transcript_student_${userId}`;
+  const STORAGE_KEY_DEPT = `uet_transcript_dept_${userId}`;
 
   // Department State
   const [currentDepartment, setCurrentDepartment] = useState(() => {
@@ -33,7 +48,7 @@ function Dashboard({ user, handleLogout }) {
     return DEPARTMENTS[0]; // Software Engineering
   });
 
-  // Student Info State
+  // Student Info State - Personalized for this user
   const [studentInfo, setStudentInfo] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY_STUDENT);
     if (saved) {
@@ -43,13 +58,32 @@ function Dashboard({ user, handleLogout }) {
         console.error("Failed to parse saved student info", e);
       }
     }
+    // If user is Himayat, use sample transcript
+    if (user?.email === "24PWSWE0006@gmail.com" || user?.id === 2) {
+      return {
+        ...SAMPLE_TRANSCRIPT.studentInfo,
+        studentName: user?.name || SAMPLE_TRANSCRIPT.studentInfo.studentName,
+      };
+    }
+    // For every other student, initialize their own clean record
     return {
-      ...SAMPLE_TRANSCRIPT.studentInfo,
-      studentName: user?.name || SAMPLE_TRANSCRIPT.studentInfo.studentName,
+      studentName: user?.name || "",
+      fatherName: "",
+      registrationNo: extractRegNo(user?.email) || "",
+      program: "BS Software Engineering",
+      plan: "BS Software Engineering Major",
+      universityName: "University of Engineering & Technology",
+      universityLocation: "Peshawar, Pakistan",
+      department: "se",
+      issueDate: "09/22/2026",
+      resultDeclarationDate: "09/15/2026",
+      preparedBy: "",
+      checkedBy: "",
+      controllerTitle: "Controller of Examinations",
     };
   });
 
-  // Semesters Data State
+  // Semesters Data State - Personalized for this user
   const [rawSemesters, setRawSemesters] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY_SEMESTERS);
     if (saved) {
@@ -59,8 +93,51 @@ function Dashboard({ user, handleLogout }) {
         console.error("Failed to parse saved semesters", e);
       }
     }
-    return SAMPLE_TRANSCRIPT.semesters;
+    if (user?.email === "24PWSWE0006@gmail.com" || user?.id === 2) {
+      return SAMPLE_TRANSCRIPT.semesters;
+    }
+    return [
+      {
+        id: "sem-1",
+        name: "Semester 1",
+        subjects: [
+          { id: "sub-1", code: "SE 101", title: "Information & Comm Technologies", credits: 2.0, grade: "A" },
+          { id: "sub-2", code: "SE 101L", title: "ICT Lab", credits: 1.0, grade: "A" },
+          { id: "sub-3", code: "SE 102", title: "Computer Programming", credits: 3.0, grade: "A" },
+          { id: "sub-4", code: "BSI 101", title: "Islamic Studies", credits: 2.0, grade: "A" },
+          { id: "sub-5", code: "BSI 173", title: "Calculus & Analytic Geometry", credits: 3.0, grade: "A" },
+        ],
+      },
+    ];
   });
+
+  // Load from MySQL database for this student on login
+  useEffect(() => {
+    if (!user?.id || user.id === "demo-user") return;
+    let isMounted = true;
+    setCloudStatus("Syncing with DB...");
+
+    fetch(`${API_URL}/transcript/${user.id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!isMounted) return;
+        if (data.exists) {
+          if (data.studentInfo) setStudentInfo(data.studentInfo);
+          if (data.semesters) setRawSemesters(data.semesters);
+          setCloudStatus("DB Synced ✓");
+        } else {
+          setCloudStatus("Personal Record Ready");
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch remote transcript", err);
+        if (isMounted) setCloudStatus("Local Only");
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [user?.id]);
 
   // Dynamically calculate SCH, SGP, SGPA, CCH, CGP, CGPA
   const calculatedSemesters = calculateAllSemesters(rawSemesters);
@@ -233,6 +310,43 @@ function Dashboard({ user, handleLogout }) {
   const currentCCH = lastSem.cch !== undefined ? lastSem.cch : 0;
   const currentCGP = lastSem.cgp !== undefined ? lastSem.cgp : 0;
 
+  // Save student's transcript to MySQL database
+  const handleSaveToCloud = async () => {
+    if (!user?.id || user.id === "demo-user") {
+      alert("In demo mode, your data is saved locally on this browser.");
+      return;
+    }
+    setIsSaving(true);
+    setCloudStatus("Saving to DB...");
+    try {
+      const res = await fetch(`${API_URL}/transcript/save`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user.id,
+          studentInfo,
+          semesters: rawSemesters,
+          cgpa: currentCGPA,
+          totalCredits: currentCCH,
+        }),
+      });
+      const result = await res.json();
+      if (res.ok) {
+        setCloudStatus("Saved to DB ✓");
+        alert("Success! Your personal academic transcript has been saved to the MySQL database.");
+      } else {
+        setCloudStatus("Save Failed");
+        alert("Error saving: " + (result.message || "Failed to save"));
+      }
+    } catch (err) {
+      console.error("Save error:", err);
+      setCloudStatus("Network Error");
+      alert("Could not connect to database server.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   return (
     <main className="dashboard-page">
       {/* Header with Navigation and Department Changer */}
@@ -243,6 +357,10 @@ function Dashboard({ user, handleLogout }) {
         onPrint={handlePrint}
         currentDepartment={currentDepartment}
         onOpenDeptModal={() => setShowDeptModal(true)}
+        user={user}
+        onSaveToCloud={handleSaveToCloud}
+        cloudStatus={cloudStatus}
+        isSaving={isSaving}
       />
 
       {/* Department Selector Modal */}
@@ -276,6 +394,16 @@ function Dashboard({ user, handleLogout }) {
               <div className="helper-actions">
                 <button
                   type="button"
+                  className="action-btn success-btn small"
+                  onClick={handleSaveToCloud}
+                  disabled={isSaving}
+                  title="Save this transcript to MySQL database for your user account"
+                  style={{ background: "#10b981", color: "#fff", fontWeight: "700" }}
+                >
+                  {isSaving ? "⏳ Saving..." : "💾 Save to Database"}
+                </button>
+                <button
+                  type="button"
                   className="action-btn secondary-btn small"
                   onClick={handleLoadFull8Semesters}
                   title="Load full 8-semester Software Engineering scheme from screenshots"
@@ -288,7 +416,7 @@ function Dashboard({ user, handleLogout }) {
                   onClick={handleLoadSample}
                   title="Load actual 4-semester transcript from photo"
                 >
-                  📋 Load 4-Sem Actual Record
+                  📋 Load Himayat's 4-Sem Sample
                 </button>
                 <button
                   type="button"
@@ -318,6 +446,8 @@ function Dashboard({ user, handleLogout }) {
             onReset={handleReset}
             currentDepartment={currentDepartment}
             onOpenDeptModal={() => setShowDeptModal(true)}
+            onSaveToCloud={handleSaveToCloud}
+            isSaving={isSaving}
           />
         )}
 

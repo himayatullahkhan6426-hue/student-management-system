@@ -7,6 +7,10 @@ function Header({
   onPrint,
   currentDepartment,
   onOpenDeptModal,
+  user,
+  onSaveToCloud,
+  cloudStatus,
+  isSaving,
 }) {
   return (
     <header className="dashboard-header no-print">
@@ -69,6 +73,22 @@ function Header({
       </nav>
 
       <div className="header-right-actions">
+        {cloudStatus && (
+          <span className="cloud-status-indicator" title="Database Sync Status">
+            {cloudStatus}
+          </span>
+        )}
+        {onSaveToCloud && (
+          <button
+            type="button"
+            className="save-cloud-nav-btn"
+            onClick={onSaveToCloud}
+            disabled={isSaving}
+            title="Save your personal transcript to MySQL Database"
+          >
+            {isSaving ? "⏳ Saving..." : "💾 Save to Cloud"}
+          </button>
+        )}
         <button
           type="button"
           className="print-nav-btn"
@@ -82,7 +102,7 @@ function Header({
           className="logout-btn"
           onClick={handleLogout}
         >
-          Logout
+          Logout ({user?.name ? user.name.split(" ")[0] : "Student"})
         </button>
       </div>
     </header>

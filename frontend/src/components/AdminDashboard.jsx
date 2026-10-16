@@ -7,6 +7,7 @@ function AdminDashboard({ setPage, setUser }) {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userResults, setUserResults] = useState([]);
+  const [userTranscript, setUserTranscript] = useState(null);
   const [grades, setGrades] = useState([]);
   const [message, setMessage] = useState("");
 
@@ -48,7 +49,8 @@ function AdminDashboard({ setPage, setUser }) {
 
       if (response.ok) {
         setSelectedUser(data.user);
-        setUserResults(data.results);
+        setUserResults(data.results || []);
+        setUserTranscript(data.transcript || null);
         setGrades([]);
         setMessage("");
       } else {
@@ -208,20 +210,65 @@ function AdminDashboard({ setPage, setUser }) {
 
         <div className="user-details">
 
-          <h2>User Profile</h2>
+          <h2>Student Profile & Academic Transcript</h2>
 
           <div className="profile-info">
-
             <p>
-              <strong>Name:</strong>{" "}
-              {selectedUser.name}
+              <strong>Name:</strong> {selectedUser.name}
             </p>
-
             <p>
-              <strong>Email:</strong>{" "}
-              {selectedUser.email}
+              <strong>Email:</strong> {selectedUser.email}
             </p>
+            {userTranscript?.studentInfo?.registrationNo && (
+              <p>
+                <strong>Registration No:</strong> {userTranscript.studentInfo.registrationNo}
+              </p>
+            )}
+            {userTranscript?.studentInfo?.fatherName && (
+              <p>
+                <strong>Father's Name:</strong> {userTranscript.studentInfo.fatherName}
+              </p>
+            )}
+            {userTranscript?.studentInfo?.program && (
+              <p>
+                <strong>Program:</strong> {userTranscript.studentInfo.program}
+              </p>
+            )}
 
+            {userTranscript ? (
+              <div style={{ marginTop: "14px", padding: "14px", background: "#f0fdf4", borderRadius: "8px", border: "1px solid #bbf7d0" }}>
+                <h4 style={{ margin: "0 0 8px 0", color: "#166534" }}>🎓 Saved Transcript Record (MySQL)</h4>
+                <div style={{ display: "flex", gap: "20px", fontSize: "0.95rem" }}>
+                  <span>CGPA: <strong style={{ color: "#15803d" }}>{userTranscript.cgpa}</strong></span>
+                  <span>Total Credits: <strong>{userTranscript.totalCredits}</strong></span>
+                  <span>Semesters: <strong>{userTranscript.semesters?.length || 0}</strong></span>
+                </div>
+
+                {userTranscript.semesters && (
+                  <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {userTranscript.semesters.map((sem, sIdx) => (
+                      <details key={sIdx} style={{ background: "#fff", padding: "8px 12px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
+                        <summary style={{ cursor: "pointer", fontWeight: "600", color: "#1e293b" }}>
+                          {sem.name} ({sem.subjects?.length || 0} subjects)
+                        </summary>
+                        <div style={{ marginTop: "8px", fontSize: "0.85rem" }}>
+                          {(sem.subjects || []).map((sub, subIdx) => (
+                            <div key={subIdx} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", borderBottom: "1px dashed #f1f5f9" }}>
+                              <span>{sub.code ? `${sub.code} - ` : ""}{sub.title}</span>
+                              <span><strong>{sub.grade || "In Progress"}</strong> ({sub.credits} CH)</span>
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p style={{ marginTop: "10px", color: "#64748b", fontStyle: "italic" }}>
+                No multi-semester transcript saved to MySQL for this student yet.
+              </p>
+            )}
           </div>
 
           <h2>GPA Results</h2>
