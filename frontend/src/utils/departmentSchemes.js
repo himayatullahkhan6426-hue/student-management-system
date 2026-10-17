@@ -136,7 +136,7 @@ export const SOFTWARE_ENGINEERING_SCHEME = [
     totalCredits: 18,
     totalContactHours: 22,
     courses: [
-      { code: "SE-***-1", title: "Software Engineering Elective-I", credits: 3.0, contactHours: 3 },
+      { code: "SE-***-1", title: "Artificial Intelligence", credits: 3.0, contactHours: 3 },
       { code: "SE-311", title: "Embedded Systems", credits: 2.0, contactHours: 2 },
       { code: "SE-311L", title: "Embedded Systems Lab", credits: 1.0, contactHours: 3 },
       { code: "SE-312", title: "Design and Analysis of Algorithms", credits: 3.0, contactHours: 3 },
@@ -196,38 +196,6 @@ export const SOFTWARE_ENGINEERING_SCHEME = [
     ],
   },
 ];
-
-// Computer Science Scheme (8 Semesters)
-export const COMPUTER_SCIENCE_SCHEME = [
-  {
-    semesterIndex: 1,
-    name: "Semester 1",
-    courses: [
-      { code: "CS-101", title: "Introduction to ICT", credits: 2.0 },
-      { code: "CS-101L", title: "Introduction to ICT Lab", credits: 1.0 },
-      { code: "CS-102", title: "Programming Fundamentals", credits: 3.0 },
-      { code: "CS-102L", title: "Programming Fundamentals Lab", credits: 1.0 },
-      { code: "BSI-101", title: "Islamic Studies", credits: 2.0 },
-      { code: "BSI-110", title: "Pakistan Studies", credits: 2.0 },
-      { code: "BSI-133", title: "English Composition & Comprehension", credits: 3.0 },
-      { code: "BSI-173", title: "Calculus & Analytical Geometry", credits: 3.0 },
-    ],
-  },
-  {
-    semesterIndex: 2,
-    name: "Semester 2",
-    courses: [
-      { code: "CS-107", title: "Object Oriented Programming", credits: 3.0 },
-      { code: "CS-107L", title: "Object Oriented Programming Lab", credits: 1.0 },
-      { code: "CS-103", title: "Discrete Structures", credits: 3.0 },
-      { code: "CS-106", title: "Digital Logic Design", credits: 3.0 },
-      { code: "CS-106L", title: "Digital Logic Design Lab", credits: 1.0 },
-      { code: "BSI-111", title: "Linear Algebra", credits: 3.0 },
-      { code: "BSI-143", title: "Communication & Presentation Skills", credits: 3.0 },
-    ],
-  },
-];
-
 // Helper to convert scheme to editable semesters state
 export function createSemestersFromScheme(scheme, departmentId = "se") {
   return scheme.map((sem, sIdx) => ({

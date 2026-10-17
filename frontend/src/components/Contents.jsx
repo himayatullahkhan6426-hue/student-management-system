@@ -1,6 +1,6 @@
 import React from "react";
 
-function Header({
+function Contents({
   activeTab,
   setActiveTab,
   currentDepartment,
@@ -18,7 +18,7 @@ function Header({
         <div>
           <h2>Academic & Transcript Portal</h2>
           <div className="brand-dept-tag" onClick={onOpenDeptModal} title="Click to change academic department">
-            <span>{currentDepartment?.name || "Software Engineering"}</span>
+            <span>{currentDepartment?.name}</span>
             <small>▼</small>
           </div>
         </div>
@@ -81,4 +81,4 @@ function Header({
   );
 }
 
-export default Header;
+export default Contents;

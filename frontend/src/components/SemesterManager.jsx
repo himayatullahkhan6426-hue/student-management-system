@@ -179,14 +179,6 @@ function SemesterManager({
         <div className="manager-action-buttons">
           <button
             type="button"
-            className="action-btn secondary-btn"
-            onClick={onLoadSample}
-            title="Load Four semesters of software engineering"
-          >
-            📋 Load First 4-Sem Schema
-          </button>
-          <button
-            type="button"
             className="action-btn primary-btn"
             onClick={onLoadFull8Semesters}
             title="Load full 8-semester Software Engineering curriculum (135 Credits)"
@@ -574,7 +566,7 @@ function SemesterManager({
 
           {/* Add Subject Button Bar */}
           <div className="add-subject-bar">
-            <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            <div className="add-subject-actions">
               <button
                 type="button"
                 className="action-btn add-sub-btn"

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
+import Contents from "./Contents";
 import WelcomeCard from "./WelcomeCard";
 import TranscriptView from "./TranscriptView";
 import SemesterManager from "./SemesterManager";
 import StudentInfoEditor from "./StudentInfoEditor";
 import CGPAAnalytics from "./CGPAAnalytics";
-import SchemeOfStudiesViewer from "./SchemeOfStudiesViewer";
 import GPAPlanner from "./GPAPlanner";
 import DepartmentSelector from "./DepartmentSelector";
 import {
@@ -191,7 +190,7 @@ function Dashboard({ user, handleLogout }) {
     }
   };
 
-  // Load 4-Semester Actual Transcript (from screenshot page 1)
+  // Load 4-Semester Actual Transcript
   const handleLoadSample = () => {
     if (
       window.confirm(
@@ -199,7 +198,6 @@ function Dashboard({ user, handleLogout }) {
       )
     ) {
       setRawSemesters(SAMPLE_TRANSCRIPT.semesters);
-      setActiveTab("transcript");
     }
   };
 
@@ -216,28 +214,6 @@ function Dashboard({ user, handleLogout }) {
         program: "BS Software Engineering",
         plan: "BS Software Engineering Major",
       }));
-      setActiveTab("transcript");
-    }
-  };
-
-  // Apply Full 8-Semester Scheme from Scheme viewer
-  const handleApplyFullScheme = () => {
-    if (
-      window.confirm(
-        "Apply the official 8-Semester Software Engineering curriculum to your transcript? All 135 credit hours from the Scheme of Studies will be loaded."
-      )
-    ) {
-      const allSemesters = createSemestersFromScheme(SOFTWARE_ENGINEERING_SCHEME, "se");
-      // Merge grades from existing semesters if names match
-      const merged = allSemesters.map((newSem) => {
-        const existing = rawSemesters.find((s) => s.name === newSem.name);
-        if (existing) {
-          return existing;
-        }
-        return newSem;
-      });
-      setRawSemesters(merged);
-      setActiveTab("transcript");
     }
   };
 
@@ -303,10 +279,6 @@ function Dashboard({ user, handleLogout }) {
 
   // Save student's transcript to MySQL database
   const handleSaveToCloud = async () => {
-    if (!user?.id || user.id === "demo-user") {
-      alert("In demo mode, your data is saved locally on this browser.");
-      return;
-    }
     setIsSaving(true);
     setCloudStatus("Saving to DB...");
     try {
@@ -355,8 +327,8 @@ function Dashboard({ user, handleLogout }) {
       />
      
 
-{/* Header with Navigation and Department Changer */}
-      <Header
+{/* Contents with Navigation and Department Changer */}
+      <Contents
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onPrint={handlePrint}
@@ -380,18 +352,17 @@ function Dashboard({ user, handleLogout }) {
 
       {/* Main Content Area Based on Active Tab */}
       <div className="tab-view-container">
-        {/* 1. Official Transcript View (100% Match to Photo) */}
+        {/* 1. Official Transcript View */}
         {activeTab === "transcript" && (
           <div className="transcript-tab-content">
             {/* Quick Actions Helper */}
-            <div className="helper-banner Box no-print">
               <div className="helper-actions">
                 <button
                   type="button"
                   className="action-btn success-btn small"
                   onClick={handleSaveToCloud}
                   disabled={isSaving}
-                  title="Save this transcript to MySQL database for your user account"
+                  title="Save this transcript to database for your user account"
                   style={{ background: "#10b981", color: "#fff", fontWeight: "700" }}
                 >
                   {isSaving ? "⏳ Saving..." : "💾 Save to Database"}
@@ -412,16 +383,16 @@ function Dashboard({ user, handleLogout }) {
                 >
                   📋 Load 4-Semesters
                 </button>
-          <button
-            type="button"
-            className="action-btn print-btn"
-            onClick={handlePrint}
-            title="Open print dialog to print or save as PDF"
-          >
-            Print / Save as PDF
-          </button>
+                <button
+                    type="button"
+                    className="action-btn print-btn"
+                    onClick={handlePrint}
+                    title="Open print dialog to print or save as PDF"
+                    >
+                      Print / Save as PDF
+                </button>
               </div>
-            </div>
+            
 
             <TranscriptView
               studentInfo={studentInfo}
@@ -443,15 +414,6 @@ function Dashboard({ user, handleLogout }) {
             onOpenDeptModal={() => setShowDeptModal(true)}
             onSaveToCloud={handleSaveToCloud}
             isSaving={isSaving}
-          />
-        )}
-
-        {/* 3. Official Scheme of Studies Viewer (8 Semesters from Screenshot) */}
-        {activeTab === "scheme" && (
-          <SchemeOfStudiesViewer
-            onApplyFullScheme={handleApplyFullScheme}
-            onAddCourseToSemester={handleAddCourseToSemester}
-            currentSemesters={calculatedSemesters}
           />
         )}
 

@@ -29,7 +29,6 @@ return ( <AdminDashboard
 }
 
 
-
 if (page === "software") {
 return ( <Dashboard
      user={user}
@@ -37,6 +36,7 @@ return ( <Dashboard
    />
 );
 }
+
 
 return ( <main className="auth-page"> <section className="auth-container">
 {page === "login" ? ( <Login
