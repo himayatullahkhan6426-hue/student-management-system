@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo, useRef, useState, useEffect } from "react";
 import "./TranscriptView.css";
 
 const FIRST_PAGE_HEIGHT = 660;
@@ -12,6 +12,28 @@ const SEMESTER_GAP = 16;
 
 function TranscriptView({ studentInfo = {}, semesters = [], onPrint }) {
   const transcriptRef = useRef(null);
+  const [scale, setScale] = useState(1);
+
+useEffect(() => {
+  const updateScale = () => {
+    const screenWidth = window.innerWidth;
+
+    // A4 width in CSS pixels (210mm ≈ 794px)
+    const a4Width = 794;
+
+    if (screenWidth < a4Width) {
+      setScale((screenWidth - 20) / a4Width);
+    } else {
+      setScale(1);
+    }
+  };
+
+  updateScale();
+
+  window.addEventListener("resize", updateScale);
+
+  return () => window.removeEventListener("resize", updateScale);
+}, []);
 
   const formatNumber = (value) => {
     const number = Number(value);
@@ -120,7 +142,12 @@ const pages = useMemo(() => {
 
   return (
     <div className="transcript-wrapper" ref={transcriptRef}>
-      <div className="transcript-paper-container">
+      <div
+  className="transcript-paper-container"
+  style={{
+    "--transcript-scale": scale,
+  }}
+>
 
         {pages.map((page, pageIndex) => (
           <div

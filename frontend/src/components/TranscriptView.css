@@ -585,3 +585,36 @@
     min-width: 0;
   }
 }
+
+/* MOBILE AUTO ZOOM OUT */
+
+@media screen and (max-width: 768px) {
+
+  .transcript-wrapper {
+    overflow-x: hidden !important;
+    padding: 10px 0 !important;
+  }
+
+  .transcript-paper-container {
+    width: 100%;
+    align-items: center;
+  }
+
+  .transcript-sheet {
+    width: 210mm !important;
+    min-width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+
+    transform: scale(var(--transcript-scale));
+    transform-origin: top left;
+
+    margin-bottom: calc(
+      (297mm * var(--transcript-scale)) - 297mm
+    );
+  }
+
+  .uet-two-column-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
