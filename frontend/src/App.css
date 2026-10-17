@@ -1773,17 +1773,9 @@ gap: 8px;
   background: #f1f5f9;
 }
 
-/* ========================================================
-   OFFICIAL TRANSCRIPT PAPER STYLING (MATCHES UET PESHAWAR)
-   ======================================================== */
+/* Transcript document styles are maintained in TranscriptView.css */
 
-.transcript-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 50px;
-}
+
 
 .transcript-toolbar {
   width: 100%;
@@ -1827,360 +1819,120 @@ gap: 8px;
 }
 
 /* Paper Container */
-.transcript-paper-container {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 10px 0 30px 0;
-}
+
 
 /* The Exact A4 Transcript Sheet */
-.transcript-sheet {
-  width: 800px;
-  min-height: 1100px;
-  background: #ffffff;
-  padding: 42px 48px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
-  border: 1px solid #d5d9e2;
-  position: relative;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: #000000;
-}
+
 
 /* Subtle Watermark in background */
-.transcript-watermark {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  opacity: 0.035;
-  color: #000000;
-  z-index: 0;
-}
+
 
 /* Transcript Header */
-.transcript-header {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  margin-bottom: 8px;
-}
 
-.univ-titles .univ-name {
-  font-size: 1.25rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  color: #000000;
-  margin-bottom: 2px;
-}
 
-.univ-titles .univ-location {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #000000;
-  margin-bottom: 12px;
-}
 
-.reg-number-row {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
 
-.reg-label {
-  font-weight: 600;
-}
 
-.reg-value {
-  font-weight: 800;
-  letter-spacing: 0.04em;
-}
+
+
+
+
+
+
 
 /* Title Banner */
-.transcript-title-banner {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  margin: 6px 0 10px 0;
-}
 
-.title-rule {
-  height: 1px;
-  background-color: #000000;
-  width: 100%;
-}
 
-.doc-title {
-  font-size: 1.05rem;
-  font-weight: 800;
-  letter-spacing: 0.25em;
-  padding: 4px 0;
-  color: #000000;
-}
+
+
+
 
 /* Student Metadata Section */
-.student-metadata-section {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 8px;
-}
 
-.meta-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.82rem;
-}
 
-.meta-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 
-.meta-field {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
 
-.father-field {
-  min-width: 280px;
-}
 
-.meta-lbl {
-  font-weight: 700;
-  color: #000000;
-}
 
-.meta-val {
-  font-weight: 600;
-  color: #000000;
-}
 
-.student-name-highlight {
-  font-weight: 700;
-}
+
+
+
+
+
+
+
+
 
 /* Main Courses Table */
-.courses-table-container {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  margin-top: 6px;
-}
 
-.courses-table-header {
-  display: grid;
-  grid-template-columns: 85px 1fr 65px 65px;
-  padding: 4px 6px;
-  border-top: 1px solid #000000;
-  border-bottom: 1px solid #000000;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #000000;
-  text-align: left;
-}
 
-.col-code {
-  width: 85px;
-}
 
-.col-title {
-  flex: 1;
-}
 
-.col-ch {
-  width: 65px;
-  text-align: right;
-  padding-right: 8px;
-}
 
-.col-grade {
-  width: 65px;
-  text-align: center;
-}
+
+
+
+
+
+
 
 /* Semester Blocks */
-.semesters-flow {
-  display: flex;
-  flex-direction: column;
-}
 
-.semester-block {
-  width: 100%;
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
 
-.semester-name-heading {
-  text-align: center;
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: #000000;
-  padding: 6px 0 4px 0;
-}
 
-.subjects-table-body {
-  display: flex;
-  flex-direction: column;
-}
 
-.subject-line-row {
-  display: grid;
-  grid-template-columns: 85px 1fr 65px 65px;
-  padding: 2.5px 6px;
-  font-size: 0.77rem;
-  color: #000000;
-  align-items: center;
-}
 
-.subject-line-row .col-code {
-  font-weight: 600;
-}
 
-.subject-line-row .col-title {
-  font-weight: 500;
-}
 
-.subject-line-row .col-ch {
-  font-family: inherit;
-  font-variant-numeric: tabular-nums;
-}
 
-.subject-line-row .col-grade {
-  font-weight: 600;
-}
 
-.empty-sub-row {
-  padding: 8px;
-  font-size: 0.75rem;
-  text-align: center;
-  color: #666;
-  font-style: italic;
-}
+
+
+
+
+
+
+
+
+
+
 
 /* Semester Summary Box (SCH, SGP, SGPA, CCH, CGP, CGPA) */
-.semester-summary-box {
-  border: 1px solid #000000;
-  margin: 6px 0 10px 0;
-  padding: 4px 12px;
-  font-size: 0.76rem;
-  font-weight: 700;
-  font-family: inherit;
-}
 
-.summary-row-semester,
-.summary-row-cumulative {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 36px;
-  padding: 1.5px 0;
-}
 
-.sum-stat {
-  display: flex;
-  gap: 5px;
-  min-width: 95px;
-}
 
-.sum-lbl {
-  font-weight: 700;
-}
 
-.sum-val {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
 
-.cgpa-highlight {
-  font-weight: 800;
-}
+
+
+
+
+
+
 
 /* Footer Section */
-.transcript-official-footer {
-  position: relative;
-  z-index: 1;
-  margin-top: 35px;
-  font-size: 0.76rem;
-}
 
-.embossed-notice {
-  font-weight: 700;
-  font-style: italic;
-  margin-bottom: 20px;
-}
 
-.signatures-grid {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 30px;
-}
 
-.sig-left-col {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
 
-.sig-line-item {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
 
-.sig-lbl {
-  font-weight: 700;
-  min-width: 140px;
-}
 
-.sig-underline {
-  letter-spacing: -0.05em;
-  font-weight: 500;
-}
 
-.sig-line-item.date-item {
-  margin-top: 4px;
-}
 
-.rectification-notice {
-  margin-top: 10px;
-  font-weight: 700;
-  font-size: 0.72rem;
-}
 
-.sig-right-col {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
-.stamp-placeholder {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  border: 1px dashed rgba(0, 0, 0, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.55rem;
-  font-weight: 700;
-  color: rgba(0, 0, 0, 0.4);
-  margin-bottom: 10px;
-  text-align: center;
-  padding: 6px;
-}
+
+
+
+
+
+
+
+
+
+
+
 
 .controller-title {
   font-size: 0.88rem;
@@ -2417,10 +2169,7 @@ gap: 8px;
   border-color: #ddd6fe;
 }
 
-.metric-pill.cgpa-highlight-pill {
-  background: #ecfeff;
-  border-color: #a5f3fc;
-}
+
 
 .metric-pill .metric-title {
   font-size: 0.65rem;
@@ -2439,9 +2188,7 @@ gap: 8px;
   color: var(--primary);
 }
 
-.metric-pill.cgpa-highlight-pill .metric-value {
-  color: #0891b2;
-}
+
 
 .delete-sem-btn {
   background: #fef2f2;
@@ -2999,129 +2746,20 @@ gap: 8px;
    PRINT STYLES - DEDICATED FOR OFFICIAL A4 TRANSCRIPT
    ======================================================== */
 
-@media print {
-  @page {
-    size: A4 portrait;
-    margin: 10mm 12mm 10mm 12mm;
-  }
 
-  body {
-    background: #ffffff !important;
-    color: #000000 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
-  }
-
-  /* Hide all application chrome and navigation */
-  .no-print,
-  .dashboard-header,
-  .welcome-card,
-  .helper-banner,
-  .transcript-toolbar,
-  .semester-tabs-container,
-  .manager-header-card,
-  .active-semester-editor,
-  .analytics-container,
-  .planner-container,
-  .scheme-viewer-container,
-  .modal-overlay,
-  .modal-content,
-  .auth-page,
-  header,
-  footer,
-  nav,
-  button {
-    display: none !important;
-  }
-
-  .dashboard-page {
-    padding: 0 !important;
-    margin: 0 !important;
-    max-width: 100% !important;
-  }
-
-  .tab-view-container,
-  .transcript-tab-content,
-  .transcript-wrapper,
-  .transcript-paper-container {
-    padding: 0 !important;
-    margin: 0 !important;
-    width: 100% !important;
-    display: block !important;
-    overflow: visible !important;
-  }
-
-  .transcript-sheet {
-    box-shadow: none !important;
-    border: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
-    min-height: auto !important;
-    color: #000000 !important;
-  }
-
-  .exact-photo-layout .uet-courses-wrapper {
-    width: 372px !important;
-  }
-
-  .full-layout .uet-courses-wrapper {
-    width: 100% !important;
-  }
-
-  .uet-semester-box {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-    border: 1px solid #000000 !important;
-  }
-
-  .uet-transcript-footer {
-    page-break-inside: avoid !important;
-    break-inside: avoid !important;
-  }
-}
 
 
 /* ========================================================
    EXACT UET PESHAWAR TRANSCRIPT SPECIFIC STYLES (100% MATCH)
    ======================================================== */
 
-.layout-toggle-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #f1f5f9;
-  padding: 4px;
-  border-radius: 10px;
-  margin-right: 14px;
-}
 
-.toggle-lbl {
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-light);
-  padding-left: 6px;
-}
 
-.layout-pill-btn {
-  border: none;
-  background: transparent;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-light);
-  cursor: pointer;
-  transition: 0.2s;
-}
 
-.layout-pill-btn.active {
-  background: white;
-  color: var(--text);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
+
+
+
+
 
 /* Department Tag in Header */
 .brand-dept-tag {
@@ -3156,219 +2794,74 @@ gap: 8px;
 }
 
 /* UET Transcript Sheet Specifics */
-.exact-photo-layout .uet-courses-wrapper {
-  width: 372px;
-}
-.uet-official-header {
-  text-align: center;
-  margin-bottom: 2px;
-  color: #000000;
-}
 
-.uet-official-header .uet-title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: #000000;
-  letter-spacing: 0.01em;
-  margin-bottom: 2px;
-  line-height: 1.2;
-}
 
-.uet-official-header .uet-location {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #000000;
-  line-height: 1.2;
-}
 
-.uet-reg-no-line {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.88rem;
-  font-weight: 700;
-  margin-top: 14px;
-  margin-bottom: 3px;
-}
 
-.uet-reg-label {
-  font-weight: 700;
-}
 
-.uet-reg-val {
-  font-weight: 800;
-  letter-spacing: 0.03em;
-}
 
-.uet-divider-line {
-  height: 1px;
-  background-color: #000000;
-  width: 100%;
-  margin: 1.5px 0;
-}
 
-.uet-transcript-banner {
-  text-align: center;
-  padding: 2px 0;
-}
 
-.uet-transcript-heading {
-  font-size: 0.98rem;
-  font-weight: 400;
-  letter-spacing: 0em;
-  color: #000000;
-}
+
+
+
+
+
+
+
+
+
+
 
 /* Student Metadata Block */
-.uet-student-details-block {
-  padding: 3px 0;
-  font-size: 0.82rem;
-  color: #000000;
-}
 
-.uet-meta-line {
-  display: flex;
-  justify-content: space-between;
-  line-height: 1.35;
-}
 
-.uet-meta-line .lbl {
-  font-weight: 600;
-  margin-right: 6px;
-  letter-spacing: 0em;
-}
 
-.uet-meta-line .val {
-  font-weight: 300;
-  letter-spacing: 0em;
-}
 
-.uet-meta-line.row-1 .meta-col-right {
-  min-width: 290px;
-  letter-spacing: 0em;
-}
+
+
+
+
+
 
 /* Courses Column Headers */
-.uet-col-headers-row {
-  display: flex;
-  font-size: 0.62rem;
-  font-weight: 600;
-  color: #000000;
-  letter-spacing: 0em;
-  padding-bottom: 2px;
-}
 
-.uet-col-headers-row .th-code {
-  width: 72px;
-  flex-shrink: 0;
-}
 
-.uet-col-headers-row .th-title {
-  flex: 1;
-}
 
-.uet-col-headers-row .th-ch {
-  width: 50px;
-  padding-right: 6px;
-  flex-shrink: 0;
-}
 
-.uet-col-headers-row .th-grade {
-  width: 48px;
-  text-align: center;
-  flex-shrink: 0;
-}
+
+
+
+
+
 
 /* Semester Outlined Box */
-.uet-semester-box {
-  border: 1px solid #000000;
-  margin-bottom: 12px;
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
 
-.uet-semester-title-banner {
-  text-align: center;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: #000000;
-  padding: 3px 0 2px 0;
-  border-bottom: 1px solid #000000;
-}
 
-.uet-courses-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
 
-.uet-course-row {
-  border-bottom: 1px solid #000000;
-}
 
-.uet-course-row:last-child {
-  border-bottom: none;
-}
 
-.uet-td {
-  padding: 1.5px 5px;
-  font-size: 0.8rem;
-  color: #000000;
-  vertical-align: middle;
-  font-family: inherit;
-}
 
-.uet-td-code {
-  width: 72px;
-  border-right: 1px solid #000000;
-  white-space: nowrap;
-  font-weight: 400;
-}
 
-.uet-td-title {
-  border-right: 1px solid #000000;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-weight: 400;
-}
 
-.uet-td-ch {
-  width: 50px;
-  text-align: right;
-  padding-right: 6px;
-  border-right: 1px solid #000000;
-  font-variant-numeric: tabular-nums;
-  font-weight: 400;
-}
 
-.uet-td-grade {
-  width: 48px;
-  text-align: center;
-  font-weight: 400;
-}
+
+
+
+
+
+
+
+
+
+
 
 /* Semester Summary Box */
-.uet-semester-summary-table {
-  border-top: 1px solid #000000;
-  padding: 3px 8px;
-  font-size: 0.8rem;
-  font-weight: 550;
-}
 
-.summary-stat-row {
-  display: flex;
-  justify-content: flex-start;
-  gap: 24px;
-  padding: 1px 0;
-}
 
-.stat-cell {
-  display: flex;
-  gap: 4px;
-  min-width: 82px;
-}
+
+
+
 
 .sum-tag {
   font-weight: 500;
@@ -3380,74 +2873,27 @@ gap: 8px;
 }
 
 /* Footer Verification */
-.uet-transcript-footer {
-  margin-top: 25px;
-  font-size: 0.8rem;
-  color: #000000;
-  page-break-inside: avoid;
-  break-inside: avoid;
-}
 
-.uet-embossed-stamp-line {
-  font-weight: 500;
-  font-style: italic;
-  margin-bottom: 20px;
-}
 
-.uet-signatures-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 20px;
-}
 
-.uet-sig-left {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
 
-.uet-sig-left .sig-item {
-  display: flex;
-  gap: 6px;
-  align-items: baseline;
-}
 
-.uet-sig-left .sig-label {
-  font-weight: 700;
-  min-width: 145px;
-}
 
-.uet-sig-left .sig-line {
-  font-weight: 400;
-  letter-spacing: -0.05em;
-}
 
-.uet-rectification-note {
-  margin-top: 8px;
-  font-weight: 700;
-  font-size: 0.8rem;
-}
 
-.uet-sig-right {
-  text-align: right;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
 
-.uet-controller-heading {
-  font-size: 0.92rem;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
 
-.uet-decl-date-box {
-  font-size: 0.76rem;
-  font-weight: 600;
-  display: flex;
-  gap: 6px;
-}
+
+
+
+
+
+
+
+
+
+
+
 
 /* ========================================================
    DEPARTMENT SELECTOR MODAL
@@ -3881,33 +3327,18 @@ gap: 8px;
     padding: 10px 12px;
   }
 
-  .transcript-wrapper {
-    margin-bottom: 30px;
-    width: 100%;
-  }
+  
 
   .transcript-toolbar {
     max-width: 100%;
     padding: 10px 16px;
   }
 
-  .transcript-paper-container {
-    padding: 8px 0 24px 0;
-    width: 100%;
-  }
+  
 
-  .transcript-sheet {
-    width: 100%;
-    max-width: 100%;
-    min-height: auto;
-    padding: 26px 22px;
-    border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  }
+  
 
-  .exact-photo-layout .uet-courses-wrapper {
-    width: 100%;
-  }
+  
 
   .dept-grid-options {
     grid-template-columns: 1fr;
@@ -4338,83 +3769,35 @@ gap: 8px;
     width: 100%;
   }
 
-  .transcript-sheet {
-    padding: 16px 12px;
-    border-radius: 14px;
-  }
+  
 
-  .uet-title {
-    font-size: 1rem;
-  }
+  
 
-  .uet-location {
-    font-size: 0.88rem;
-  }
+  
 
-  .uet-reg-no-line {
-    font-size: 0.78rem;
-    margin-top: 8px;
-    justify-content: space-between;
-  }
+  
 
-  .uet-meta-line {
-    flex-direction: column;
-    gap: 3px;
-    margin-bottom: 4px;
-  }
+  
 
-  .uet-meta-line.row-1 .meta-col-right {
-    min-width: 0;
-  }
+  
 
-  .uet-col-headers-row {
-    font-size: 0.62rem;
-  }
+  
 
-  .th-code,
-  .uet-td-code {
-    width: 62px;
-    font-size: 0.74rem;
-  }
+  
 
-  .th-ch,
-  .uet-td-ch {
-    width: 40px;
-    font-size: 0.74rem;
-  }
+  
 
-  .th-grade,
-  .uet-td-grade {
-    width: 40px;
-    font-size: 0.74rem;
-  }
+  
 
-  .uet-td-title {
-    font-size: 0.74rem;
-  }
+  
 
-  .summary-stat-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px 6px;
-  }
+  
 
-  .stat-cell {
-    min-width: 0;
-    font-size: 0.72rem;
-  }
+  
 
-  .uet-signatures-container {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
-    margin-top: 18px;
-  }
+  
 
-  .uet-sig-right {
-    text-align: left;
-    align-items: flex-start;
-  }
+  
 
   .analytics-metrics-grid {
     grid-template-columns: 1fr;

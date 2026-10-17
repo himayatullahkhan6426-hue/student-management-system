@@ -16,16 +16,18 @@ function TranscriptView({ studentInfo = {}, semesters = [], onPrint }) {
 
 useEffect(() => {
   const updateScale = () => {
-    const screenWidth = window.innerWidth;
+    const screenWidth = document.documentElement.clientWidth;
 
-    // A4 width in CSS pixels (210mm ≈ 794px)
     const a4Width = 794;
 
-    if (screenWidth < a4Width) {
-      setScale((screenWidth - 20) / a4Width);
-    } else {
-      setScale(1);
-    }
+    const availableWidth = screenWidth - 20;
+
+    const newScale = Math.min(
+      1,
+      availableWidth / a4Width
+    );
+
+    setScale(newScale);
   };
 
   updateScale();
@@ -146,6 +148,8 @@ const pages = useMemo(() => {
   className="transcript-paper-container"
   style={{
     "--transcript-scale": scale,
+    "--scaled-page-width": `${794 * scale}px`,
+    "--scaled-page-height": `${1123 * scale}px`,
   }}
 >
 
