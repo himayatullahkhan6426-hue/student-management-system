@@ -3,11 +3,8 @@ import React from "react";
 function Header({
   activeTab,
   setActiveTab,
-  handleLogout,
-  onPrint,
   currentDepartment,
   onOpenDeptModal,
-  user,
   onSaveToCloud,
   cloudStatus,
   isSaving,
@@ -28,13 +25,7 @@ function Header({
       </div>
 
       <nav className="header-nav-tabs">
-        <button
-          type="button"
-          className={`nav-tab-item ${activeTab === "transcript" ? "active" : ""}`}
-          onClick={() => setActiveTab("transcript")}
-        >
-          📄 Transcript Preview
-        </button>
+
         <button
           type="button"
           className={`nav-tab-item ${activeTab === "semesters" ? "active" : ""}`}
@@ -42,13 +33,15 @@ function Header({
         >
           📝 Semesters & Subjects
         </button>
+
         <button
           type="button"
-          className={`nav-tab-item ${activeTab === "scheme" ? "active" : ""}`}
-          onClick={() => setActiveTab("scheme")}
+          className={`nav-tab-item ${activeTab === "transcript" ? "active" : ""}`}
+          onClick={() => setActiveTab("transcript")}
         >
-          📚 Scheme of Studies (8 Sem)
+          📄 Transcript Preview
         </button>
+        
         <button
           type="button"
           className={`nav-tab-item ${activeTab === "planner" ? "active" : ""}`}
@@ -81,7 +74,7 @@ function Header({
         {onSaveToCloud && (
           <button
             type="button"
-            className="save-cloud-nav-btn"
+            className="print-nav-btn"
             onClick={onSaveToCloud}
             disabled={isSaving}
             title="Save your personal transcript to MySQL Database"
@@ -89,21 +82,7 @@ function Header({
             {isSaving ? "⏳ Saving..." : "💾 Save to Cloud"}
           </button>
         )}
-        <button
-          type="button"
-          className="print-nav-btn"
-          onClick={onPrint}
-          title="Print or Save official PDF"
-        >
-          🖨️ Print PDF
-        </button>
-        <button
-          type="button"
-          className="logout-btn"
-          onClick={handleLogout}
-        >
-          Logout ({user?.name ? user.name.split(" ")[0] : "Student"})
-        </button>
+        
       </div>
     </header>
   );

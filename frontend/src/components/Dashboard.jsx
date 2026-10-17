@@ -32,6 +32,8 @@ function Dashboard({ user, handleLogout }) {
   const [cloudStatus, setCloudStatus] = useState("");
   const [isSaving, setIsSaving] = useState(false);
 
+
+
   // User-isolated storage keys
   const userId = user?.id || "guest";
   const STORAGE_KEY_SEMESTERS = `uet_transcript_semesters_${userId}`;
@@ -338,11 +340,22 @@ function Dashboard({ user, handleLogout }) {
 
   return (
     <main className="dashboard-page">
-      {/* Header with Navigation and Department Changer */}
+      {/* Welcome Banner Card */}
+      <WelcomeCard
+        studentInfo={studentInfo}
+        latestCGPA={currentCGPA}
+        totalCredits={currentCCH}
+        totalSemesters={calculatedSemesters.length}
+        onQuickPrint={handlePrint}
+        handleLogout={handleLogout}
+        user={user}
+      />
+     
+
+{/* Header with Navigation and Department Changer */}
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
-        handleLogout={handleLogout}
         onPrint={handlePrint}
         currentDepartment={currentDepartment}
         onOpenDeptModal={() => setShowDeptModal(true)}
@@ -361,14 +374,6 @@ function Dashboard({ user, handleLogout }) {
         />
       )}
 
-      {/* Welcome Banner Card */}
-      <WelcomeCard
-        studentInfo={studentInfo}
-        latestCGPA={currentCGPA}
-        totalCredits={currentCCH}
-        totalSemesters={calculatedSemesters.length}
-        onQuickPrint={handlePrint}
-      />
 
       {/* Main Content Area Based on Active Tab */}
       <div className="tab-view-container">

@@ -14,29 +14,6 @@ function TranscriptView({ studentInfo, semesters, onPrint }) {
 
   return (
     <div className="transcript-wrapper">
-      {/* Action Bar (Hidden during print) */}
-      <div className="transcript-toolbar no-print">
-        <div className="toolbar-actions">
-          <div className="layout-toggle-group">
-            <button
-              type="button"
-              className={`layout-pill-btn ${layoutMode === "exact" ? "active" : ""}`}
-              onClick={() => setLayoutMode("exact")}
-              title="Exact match to your uploaded transcript document (left-column table format)"
-            >
-              Exact Original Match
-            </button>
-            <button
-              type="button"
-              className={`layout-pill-btn ${layoutMode === "full" ? "active" : ""}`}
-              onClick={() => setLayoutMode("full")}
-              title="Full page width table format"
-            >
-              Full Page Width
-            </button>
-          </div>
-        </div>
-      </div>
 
       {/* The Printable Official Transcript Document */}
       <div className="transcript-paper-container">
@@ -196,7 +173,7 @@ function TranscriptView({ studentInfo, semesters, onPrint }) {
 
                 <div className="sig-item date-line">
                   <span className="sig-label">Date of issue:</span>
-                  <span className="sig-date-val">{studentInfo.issueDate || "09/22/2026"}</span>
+                  <span className="sig-date-val">{studentInfo.issueDate || "__/__/202__"}</span>
                 </div>
 
                 <p className="uet-rectification-note">
@@ -209,7 +186,7 @@ function TranscriptView({ studentInfo, semesters, onPrint }) {
                   {studentInfo.controllerTitle || "Controller of Examinations"}
                 </h4>
                 <div className="uet-decl-date-box">
-                  <span className="decl-txt">Result Declaration Date :</span>
+                  <span className="decl-txt">Result Declaration Date :             </span>
                   <span className="decl-val">{studentInfo.resultDeclarationDate || ""}</span>
                 </div>
               </div>

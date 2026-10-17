@@ -1,13 +1,13 @@
 import React from "react";
 
-function WelcomeCard({ studentInfo, latestCGPA, totalCredits, totalSemesters, onQuickPrint }) {
+function WelcomeCard({ studentInfo, latestCGPA, totalCredits, totalSemesters, user, handleLogout}) {
   return (
     <section className="welcome-card no-print">
       <div className="welcome-content">
         <span className="welcome-label">STUDENT MANAGEMENT SYSTEM</span>
 
         <h1>
-          Welcome, {studentInfo.studentName || "Student"}! 🎓
+          Welcome, {studentInfo.studentName || ""}! 🎓
         </h1>
 
         <p className="welcome-subtitle">
@@ -36,10 +36,10 @@ function WelcomeCard({ studentInfo, latestCGPA, totalCredits, totalSemesters, on
         </div>
         <button
           type="button"
-          className="welcome-print-btn"
-          onClick={onQuickPrint}
+          className="logout-btn"
+          onClick={handleLogout}
         >
-          📄 Print Transcript
+          Logout ({user?.name ? user.name.split(" ")[0] : ""})
         </button>
       </div>
     </section>

@@ -250,7 +250,7 @@ function SemesterManager({
                 <label className="input-label">Semester Title / Term</label>
                 <input
                   type="text"
-                  placeholder="e.g. Fall 2024, Spring 2025, Semester 5"
+                  placeholder="e.g. nth Semester"
                   value={newSemesterName}
                   onChange={(e) => setNewSemesterName(e.target.value)}
                   className="text-input"
@@ -258,7 +258,7 @@ function SemesterManager({
                 />
                 <div className="quick-suggestions">
                   <span className="suggestion-label">Quick Suggestions:</span>
-                  {["Fall 2024", "Spring 25", "Fall 25", "Spring 26", "Fall 26", "Spring 27"].map(
+                  {["First Semester", "Second Semester", "Third Semester", "Fourth Semester", "Fifth Semester", "Sixth Semester"].map(
                     (term) => (
                       <button
                         type="button"
