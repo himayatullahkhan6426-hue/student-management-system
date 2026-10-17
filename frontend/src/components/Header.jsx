@@ -51,13 +51,6 @@ function Header({
         </button>
         <button
           type="button"
-          className={`nav-tab-item ${activeTab === "profile" ? "active" : ""}`}
-          onClick={() => setActiveTab("profile")}
-        >
-          👤 Student Profile
-        </button>
-        <button
-          type="button"
           className={`nav-tab-item ${activeTab === "analytics" ? "active" : ""}`}
           onClick={() => setActiveTab("analytics")}
         >

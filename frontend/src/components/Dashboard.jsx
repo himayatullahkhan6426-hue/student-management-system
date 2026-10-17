@@ -349,6 +349,9 @@ function Dashboard({ user, handleLogout }) {
         onQuickPrint={handlePrint}
         handleLogout={handleLogout}
         user={user}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        currentDepartment={currentDepartment}
       />
      
 
