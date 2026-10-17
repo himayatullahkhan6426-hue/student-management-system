@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AuthTabs from "./AuthTabs";
+import "./Login.css";
 
 const API_URL =
   "https://student-management-system-d4cj.onrender.com";
@@ -8,24 +9,28 @@ function Login({ setPage, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
+    if (loading) return;
+
+    setLoading(true);
+    setMessage("");
+
     try {
-      const response = await fetch(
-        API_URL + "/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+        }),
+      });
 
       const data = await response.json();
 
@@ -41,113 +46,247 @@ function Login({ setPage, setUser }) {
           setPage("software");
         }
       } else {
-        setMessage(data.message);
+        setMessage(data.message || "Invalid email or password.");
       }
-
     } catch (error) {
-      console.log(error);
-      setMessage("Could not connect to server.");
+      console.error("Login error:", error);
+      setMessage(
+        "Unable to connect to the server. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <>
-      <div className="auth-intro">
-        <div className="logo">
-          <span>G</span>
-        </div>
+    <div className="login-modern-layout">
 
-        <span className="intro-label">
-          STUDENT MANAGEMENT SYSTEM
-        </span>
+      {/* LEFT SECTION */}
+      <section className="login-modern-intro">
 
-        <h1>
-          Manage Your
-          <span> Academic Performance.</span>
-        </h1>
+        <div className="login-modern-orb login-orb-one"></div>
+        <div className="login-modern-orb login-orb-two"></div>
 
-        <p>
-          Log in securely and calculate your GPA
-          using your personal dashboard.
-        </p>
+        <div className="login-modern-intro-content">
 
-        <div className="intro-features">
-          <div>
-            <span>✓</span>
-            Secure Authentication
+          <div className="login-modern-brand">
+            <div className="login-modern-brand-icon">
+              <span>G</span>
+            </div>
+
+            <div className="login-modern-brand-text">
+              <strong>Student Management</strong>
+              <span>Academic Excellence Platform</span>
+            </div>
           </div>
 
-          <div>
-            <span>✓</span>
-            GPA Calculation
-          </div>
+          <div className="login-modern-hero">
 
-          <div>
-            <span>✓</span>
-            Student Dashboard
-          </div>
-        </div>
-      </div>
+            <div className="login-modern-badge">
+              <span className="login-modern-badge-dot"></span>
+              YOUR ACADEMIC COMPANION
+            </div>
 
-      <div className="auth-card">
-        <AuthTabs
-          page="login"
-          setPage={setPage}
-          setMessage={setMessage}
-        />
-
-        <form onSubmit={handleLogin}>
-          <div className="form-heading">
-            <h2>Welcome Back</h2>
+            <h1>
+              Your Academic
+              <br />
+              Journey,
+              <br />
+              <span>Beautifully Organized.</span>
+            </h1>
 
             <p>
-              Enter your details to access your dashboard.
+              Everything you need to manage your academic
+              progress, calculate your GPA, and track your
+              achievements — all in one powerful dashboard.
+            </p>
+
+            <div className="login-modern-features">
+
+              <div className="login-modern-feature">
+                <div className="login-feature-icon">✓</div>
+                <span>Smart GPA & CGPA Tracking</span>
+              </div>
+
+              <div className="login-modern-feature">
+                <div className="login-feature-icon">✓</div>
+                <span>Academic Transcript Management</span>
+              </div>
+
+              <div className="login-modern-feature">
+                <div className="login-feature-icon">✓</div>
+                <span>Secure Student Dashboard</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="login-modern-intro-footer">
+            <span>✦</span>
+            Designed for ambitious students
+          </div>
+
+        </div>
+      </section>
+
+      {/* RIGHT SECTION */}
+      <section className="login-modern-form-section">
+
+        <div className="login-modern-form-container">
+
+          <div className="login-modern-form-top">
+            <div className="login-modern-welcome-icon">
+              <span>✦</span>
+            </div>
+
+            <span className="login-modern-form-eyebrow">
+              WELCOME BACK
+            </span>
+
+            <h2>Sign in to your account</h2>
+
+            <p>
+              Enter your credentials to continue your
+              academic journey.
             </p>
           </div>
 
-          <div className="input-group">
-            <label>Email Address</label>
-
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
-              required
+          <div className="login-modern-tabs">
+            <AuthTabs
+              page="login"
+              setPage={setPage}
+              setMessage={setMessage}
             />
           </div>
 
-          <div className="input-group">
-            <label>Password</label>
-
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
-              required
-            />
-          </div>
-
-          <button
-            className="auth-button"
-            type="submit"
+          <form
+            className="login-modern-form"
+            onSubmit={handleLogin}
           >
-            Login to Dashboard →
-          </button>
-        </form>
 
-        {message && (
-          <div className="message">
-            {message}
+            {/* EMAIL */}
+            <div className="login-modern-field">
+
+              <label htmlFor="login-email">
+                Email Address
+              </label>
+
+              <div className="login-modern-input-wrapper">
+
+                <span className="login-modern-input-icon">
+                  ✉
+                </span>
+
+                <input
+                  id="login-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setMessage("");
+                  }}
+                  autoComplete="email"
+                  required
+                />
+
+              </div>
+            </div>
+
+            {/* PASSWORD */}
+            <div className="login-modern-field">
+
+              <label htmlFor="login-password">
+                Password
+              </label>
+
+              <div className="login-modern-input-wrapper">
+
+                <span className="login-modern-input-icon">
+                  🔒
+                </span>
+
+                <input
+                  id="login-password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setMessage("");
+                  }}
+                  autoComplete="current-password"
+                  required
+                />
+
+                <button
+                  type="button"
+                  className="login-modern-password-toggle"
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
+                  aria-label={
+                    showPassword
+                      ? "Hide password"
+                      : "Show password"
+                  }
+                  aria-pressed={showPassword}
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+
+              </div>
+            </div>
+
+            {/* ERROR */}
+            {message && (
+              <div
+                className="login-modern-error"
+                role="alert"
+              >
+                <span>⚠</span>
+                <p>{message}</p>
+              </div>
+            )}
+
+            {/* SUBMIT */}
+            <button
+              className="login-modern-submit"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="login-modern-spinner"></span>
+                  Signing you in...
+                </>
+              ) : (
+                <>
+                  Sign In
+                  <span className="login-modern-arrow">→</span>
+                </>
+              )}
+            </button>
+
+          </form>
+
+          <div className="login-modern-form-footer">
+            <div className="login-modern-security">
+              <span>🔐</span>
+              Secure authentication
+            </div>
+
+            <p>
+              Your academic journey starts here.
+            </p>
           </div>
-        )}
-      </div>
-    </>
+
+        </div>
+
+      </section>
+
+    </div>
   );
 }
 

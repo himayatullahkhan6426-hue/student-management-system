@@ -1,0 +1,763 @@
+/* ==========================================
+   PREMIUM STUDENT LOGIN
+========================================== */
+
+.login-modern-layout {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+
+  width: 100%;
+  min-height: 650px;
+
+  background: #ffffff;
+  border-radius: 26px;
+  overflow: hidden;
+
+  box-shadow:
+    0 25px 80px rgba(35, 31, 91, 0.12);
+
+  font-family: "Inter", sans-serif;
+}
+
+/* ==========================================
+   LEFT INTRO SECTION
+========================================== */
+
+.login-modern-intro {
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  align-items: center;
+
+  padding: 55px;
+
+  color: #ffffff;
+
+  background: linear-gradient(
+    145deg,
+    #4338ca 0%,
+    #6d5dfc 48%,
+    #0891b2 100%
+  );
+}
+
+.login-modern-intro::before {
+  content: "";
+
+  position: absolute;
+  width: 400px;
+  height: 400px;
+
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 50%;
+
+  top: -190px;
+  right: -170px;
+
+  pointer-events: none;
+}
+
+.login-modern-intro::after {
+  content: "";
+
+  position: absolute;
+  width: 320px;
+  height: 320px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+
+  bottom: -180px;
+  left: -120px;
+
+  pointer-events: none;
+}
+
+/* Decorative Orbs */
+
+.login-modern-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(5px);
+}
+
+.login-orb-one {
+  width: 180px;
+  height: 180px;
+
+  top: 10%;
+  right: -70px;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.login-orb-two {
+  width: 130px;
+  height: 130px;
+
+  bottom: 12%;
+  left: -60px;
+
+  background: rgba(34, 211, 238, 0.2);
+}
+
+.login-modern-intro-content {
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  min-height: 530px;
+}
+
+/* Brand */
+
+.login-modern-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.login-modern-brand-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 52px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  background: rgba(255, 255, 255, 0.17);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+
+  border-radius: 15px;
+
+  backdrop-filter: blur(12px);
+
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.login-modern-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.login-modern-brand-text strong {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+
+.login-modern-brand-text span {
+  font-size: 11px;
+  opacity: 0.78;
+}
+
+/* Hero */
+
+.login-modern-hero {
+  margin-top: auto;
+  margin-bottom: auto;
+
+  padding: 55px 0;
+}
+
+.login-modern-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 8px 13px;
+
+  border-radius: 30px;
+
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+
+  margin-bottom: 25px;
+}
+
+.login-modern-badge-dot {
+  width: 7px;
+  height: 7px;
+
+  background: #67e8f9;
+  border-radius: 50%;
+
+  box-shadow: 0 0 12px #67e8f9;
+}
+
+.login-modern-hero h1 {
+  margin: 0;
+
+  font-size: clamp(32px, 3.3vw, 48px);
+  line-height: 1.15;
+
+  font-weight: 800;
+  letter-spacing: -1.8px;
+
+  color: #ffffff;
+}
+
+.login-modern-hero h1 span {
+  display: inline-block;
+
+  margin-top: 5px;
+
+  background: linear-gradient(
+    90deg,
+    #ffffff,
+    #a5f3fc
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+
+  -webkit-text-fill-color: transparent;
+}
+
+.login-modern-hero > p {
+  margin-top: 24px;
+
+  max-width: 430px;
+
+  font-size: 14px;
+  line-height: 1.9;
+
+  color: rgba(255, 255, 255, 0.83);
+}
+
+/* Features */
+
+.login-modern-features {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  margin-top: 35px;
+}
+
+.login-modern-feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.login-feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 25px;
+  height: 25px;
+
+  flex-shrink: 0;
+
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  color: #a5f3fc;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.login-modern-intro-footer {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.login-modern-intro-footer span {
+  color: #a5f3fc;
+  font-size: 18px;
+}
+
+/* ==========================================
+   RIGHT LOGIN FORM
+========================================== */
+
+.login-modern-form-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 55px 45px;
+
+  background: #ffffff;
+}
+
+.login-modern-form-container {
+  width: 100%;
+  max-width: 390px;
+}
+
+/* Welcome */
+
+.login-modern-form-top {
+  text-align: left;
+  margin-bottom: 25px;
+}
+
+.login-modern-welcome-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 50px;
+  height: 50px;
+
+  margin-bottom: 22px;
+
+  border-radius: 15px;
+
+  background: #f0efff;
+  color: #6d5dfc;
+
+  font-size: 25px;
+}
+
+.login-modern-form-eyebrow {
+  display: block;
+
+  font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 1.5px;
+  color: #6d5dfc;
+
+  margin-bottom: 12px;
+}
+
+.login-modern-form-top h2 {
+  margin: 0;
+
+  font-size: clamp(25px, 2.4vw, 33px);
+  font-weight: 800;
+
+  letter-spacing: -1px;
+  line-height: 1.25;
+
+  color: #17172a;
+}
+
+.login-modern-form-top p {
+  margin-top: 12px;
+
+  font-size: 13px;
+  line-height: 1.8;
+
+  color: #697386;
+}
+
+/* Tabs */
+
+.login-modern-tabs {
+  margin-bottom: 28px;
+}
+
+/* Form */
+
+.login-modern-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.login-modern-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.login-modern-field label {
+  font-size: 12px;
+  font-weight: 700;
+
+  color: #334155;
+}
+
+/* Input */
+
+.login-modern-input-wrapper {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 52px;
+
+  padding: 0 14px;
+
+  border: 1.5px solid #e2e8f0;
+  border-radius: 13px;
+
+  background: #f8fafc;
+
+  transition: all 0.2s ease;
+}
+
+.login-modern-input-wrapper:hover {
+  border-color: #c7d2fe;
+  background: #ffffff;
+}
+
+.login-modern-input-wrapper:focus-within {
+  border-color: #6d5dfc;
+  background: #ffffff;
+
+  box-shadow: 0 0 0 4px rgba(109, 93, 252, 0.1);
+}
+
+.login-modern-input-icon {
+  width: 25px;
+  flex-shrink: 0;
+
+  font-size: 17px;
+  color: #94a3b8;
+}
+
+.login-modern-input-wrapper input {
+  width: 100%;
+  min-width: 0;
+
+  flex: 1;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  padding: 0 5px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  color: #0f172a;
+}
+
+.login-modern-input-wrapper input::placeholder {
+  color: #94a3b8;
+}
+
+.login-modern-password-toggle {
+  border: none;
+  background: transparent;
+
+  color: #6d5dfc;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  padding: 8px 4px;
+
+  cursor: pointer;
+}
+
+.login-modern-password-toggle:hover {
+  color: #4338ca;
+}
+
+/* Error */
+
+.login-modern-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  padding: 13px 15px;
+
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 12px;
+
+  color: #be123c;
+
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.login-modern-error p {
+  margin: 0;
+}
+
+/* Submit Button */
+
+.login-modern-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 53px;
+
+  border: none;
+  border-radius: 13px;
+
+  background: linear-gradient(
+    135deg,
+    #6d5dfc,
+    #5143d9
+  );
+
+  color: white;
+
+  font-size: 14px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 25px rgba(109, 93, 252, 0.23);
+
+  transition: all 0.2s ease;
+}
+
+.login-modern-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 15px 30px rgba(109, 93, 252, 0.32);
+}
+
+.login-modern-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-modern-submit:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.login-modern-arrow {
+  font-size: 20px;
+  transition: transform 0.2s ease;
+}
+
+.login-modern-submit:hover .login-modern-arrow {
+  transform: translateX(4px);
+}
+
+/* Loading Spinner */
+
+.login-modern-spinner {
+  width: 18px;
+  height: 18px;
+
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+
+  border-radius: 50%;
+
+  animation: loginModernSpin 0.7s linear infinite;
+}
+
+@keyframes loginModernSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Footer */
+
+.login-modern-form-footer {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.login-modern-security {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #64748b;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.login-modern-form-footer > p {
+  margin-top: 12px;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+
+/* Tablets */
+
+@media (max-width: 950px) {
+  .login-modern-layout {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .login-modern-intro {
+    padding: 35px;
+  }
+
+  .login-modern-form-section {
+    padding: 40px 30px;
+  }
+
+  .login-modern-hero h1 {
+    font-size: 34px;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 700px) {
+  .login-modern-layout {
+    display: flex;
+    flex-direction: column;
+
+    min-height: auto;
+
+    border-radius: 20px;
+  }
+
+  .login-modern-intro {
+    padding: 28px 24px;
+  }
+
+  .login-modern-intro-content {
+    min-height: auto;
+  }
+
+  .login-modern-brand-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 21px;
+  }
+
+  .login-modern-brand-text strong {
+    font-size: 13px;
+  }
+
+  .login-modern-brand-text span {
+    font-size: 10px;
+  }
+
+  .login-modern-hero {
+    padding: 30px 0 15px;
+  }
+
+  .login-modern-badge {
+    font-size: 9px;
+    margin-bottom: 15px;
+  }
+
+  .login-modern-hero h1 {
+    font-size: 29px;
+    letter-spacing: -1px;
+  }
+
+  .login-modern-hero > p {
+    font-size: 12px;
+    line-height: 1.7;
+    margin-top: 15px;
+  }
+
+  .login-modern-features {
+    display: none;
+  }
+
+  .login-modern-intro-footer {
+    display: none;
+  }
+
+  .login-modern-form-section {
+    padding: 35px 24px;
+  }
+
+  .login-modern-form-container {
+    max-width: 100%;
+  }
+
+  .login-modern-form-top h2 {
+    font-size: 25px;
+  }
+
+  .login-modern-input-wrapper {
+    height: 50px;
+  }
+}
+
+/* Very Small Phones */
+
+@media (max-width: 380px) {
+  .login-modern-intro {
+    padding: 24px 18px;
+  }
+
+  .login-modern-form-section {
+    padding: 28px 18px;
+  }
+
+  .login-modern-hero h1 {
+    font-size: 25px;
+  }
+
+  .login-modern-form-top h2 {
+    font-size: 23px;
+  }
+}
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+  .login-modern-layout *,
+  .login-modern-layout *::before,
+  .login-modern-layout *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Compatibility with existing App.jsx authentication layout */
+
+.auth-container:has(.login-modern-layout) {
+  display: block;
+  min-height: auto;
+  max-width: 1150px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.auth-page:has(.login-modern-layout) {
+  padding: 24px;
+}
+
+@media (max-width: 700px) {
+  .auth-page:has(.login-modern-layout) {
+    padding: 12px;
+    align-items: flex-start;
+  }
+
+  .auth-container:has(.login-modern-layout) {
+    width: 100%;
+    min-height: auto;
+    border-radius: 20px;
+  }
+}

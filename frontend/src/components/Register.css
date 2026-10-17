@@ -1,0 +1,213 @@
+/* ==========================================
+   PREMIUM REGISTER PAGE
+========================================== */
+
+.register-modern-layout {
+  min-height: 760px;
+}
+
+/* Left gradient */
+
+.register-modern-intro {
+  background: linear-gradient(
+    145deg,
+    #312e81 0%,
+    #6d5dfc 48%,
+    #0891b2 100%
+  );
+}
+
+/* Form section */
+
+.register-modern-form-section {
+  padding-top: 35px;
+  padding-bottom: 35px;
+}
+
+/* Form spacing */
+
+.register-modern-form {
+  gap: 17px;
+}
+
+/* ==========================================
+   PASSWORD STRENGTH
+========================================== */
+
+.register-password-strength {
+  margin-top: 4px;
+}
+
+.register-strength-bars {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+}
+
+.register-strength-bar {
+  height: 5px;
+  border-radius: 20px;
+  background: #e2e8f0;
+  transition: background 0.25s ease;
+}
+
+/* Weak */
+
+.register-strength-bar.strength-1 {
+  background: #ef4444;
+}
+
+/* Fair */
+
+.register-strength-bar.strength-2 {
+  background: #f97316;
+}
+
+/* Good */
+
+.register-strength-bar.strength-3 {
+  background: #eab308;
+}
+
+/* Strong */
+
+.register-strength-bar.strength-4 {
+  background: #10b981;
+}
+
+/* Strength label */
+
+.register-strength-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 7px;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.register-strength-text strong {
+  font-size: 11px;
+}
+
+.strength-text-1 {
+  color: #ef4444;
+}
+
+.strength-text-2 {
+  color: #f97316;
+}
+
+.strength-text-3 {
+  color: #ca8a04;
+}
+
+.strength-text-4 {
+  color: #059669;
+}
+
+/* ==========================================
+   PASSWORD MATCH
+========================================== */
+
+.register-password-match {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.register-password-match.matched {
+  color: #059669;
+}
+
+.register-password-match.not-matched {
+  color: #e11d48;
+}
+
+/* ==========================================
+   SUCCESS MESSAGE
+========================================== */
+
+.register-success-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  padding: 13px 15px;
+
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 12px;
+
+  color: #047857;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.register-success-message p {
+  margin: 0;
+}
+
+/* ==========================================
+   LOGIN LINK
+========================================== */
+
+.register-login-link {
+  border: none;
+  background: transparent;
+  padding: 0;
+
+  color: #6d5dfc;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.register-login-link:hover {
+  color: #4338ca;
+  text-decoration: underline;
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+========================================== */
+
+@media (max-width: 950px) {
+  .register-modern-layout {
+    min-height: auto;
+  }
+
+  .register-modern-form-section {
+    padding: 35px 28px;
+  }
+}
+
+@media (max-width: 700px) {
+  .register-modern-layout {
+    display: flex;
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .register-modern-intro {
+    padding: 28px 24px;
+  }
+
+  .register-modern-form-section {
+    padding: 30px 24px;
+  }
+
+  .register-modern-form {
+    gap: 18px;
+  }
+}
+
+@media (max-width: 380px) {
+  .register-modern-intro {
+    padding: 24px 18px;
+  }
+
+  .register-modern-form-section {
+    padding: 25px 18px;
+  }
+}

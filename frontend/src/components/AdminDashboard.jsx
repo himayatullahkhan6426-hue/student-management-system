@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import "./AdminDashboard.css";
 
 const API_URL =
   "https://student-management-system-d4cj.onrender.com";
@@ -9,40 +10,106 @@ function AdminDashboard({ setPage, setUser }) {
   const [userResults, setUserResults] = useState([]);
   const [userTranscript, setUserTranscript] = useState(null);
   const [grades, setGrades] = useState([]);
+  const [selectedResultId, setSelectedResultId] = useState(null);
+
   const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("error");
+
+  const [loading, setLoading] = useState(true);
+  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [gradesLoading, setGradesLoading] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+
+  const isAdmin = (user) =>
+    user?.is_admin === 1 ||
+    user?.is_admin === true ||
+    user?.is_admin === "1";
+
+  const showMessage = (text, type = "error") => {
+    setMessage(text);
+    setMessageType(type);
+  };
 
   const handleAdminLogout = () => {
     setUser(null);
     setPage("login");
   };
 
-  useEffect(() => {
-    getUsers();
-  }, []);
+  // FETCH ALL USERS
 
-  const getUsers = async () => {
+  const getUsers = useCallback(async () => {
+    setLoading(true);
+
     try {
-      const response = await fetch(
-        API_URL + "/admin/users"
-      );
+      const response = await fetch(`${API_URL}/admin/users`);
 
       const data = await response.json();
 
       if (response.ok) {
-        setUsers(data);
+        setUsers(Array.isArray(data) ? data : []);
       } else {
-        setMessage(data.message);
+        showMessage(data.message || "Could not load users.");
       }
     } catch (error) {
-      console.log(error);
-      setMessage("Could not load users");
+      console.error(error);
+      showMessage("Unable to connect to the server.");
+    } finally {
+      setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    getUsers();
+  }, [getUsers]);
+
+  // FILTER USERS
+
+  const filteredUsers = useMemo(() => {
+    return users.filter((user) => {
+      const query = search.trim().toLowerCase();
+
+      const matchesSearch =
+        (user.name || "").toLowerCase().includes(query) ||
+        (user.email || "").toLowerCase().includes(query);
+
+      const matchesFilter =
+        filter === "all" ||
+        (filter === "students" && !isAdmin(user)) ||
+        (filter === "admins" && isAdmin(user));
+
+      return matchesSearch && matchesFilter;
+    });
+  }, [users, search, filter]);
+
+  // STATISTICS
+
+  const stats = useMemo(() => {
+    const admins = users.filter(isAdmin).length;
+
+    return {
+      total: users.length,
+      students: users.length - admins,
+      admins,
+    };
+  }, [users]);
+
+  // VIEW USER
 
   const viewUser = async (userId) => {
+    setDetailsLoading(true);
+    setSelectedUser(null);
+    setUserResults([]);
+    setUserTranscript(null);
+    setGrades([]);
+    setSelectedResultId(null);
+    setMessage("");
+
     try {
       const response = await fetch(
-        API_URL + "/admin/user/" + userId
+        `${API_URL}/admin/user/${userId}`
       );
 
       const data = await response.json();
@@ -51,306 +118,815 @@ function AdminDashboard({ setPage, setUser }) {
         setSelectedUser(data.user);
         setUserResults(data.results || []);
         setUserTranscript(data.transcript || null);
-        setGrades([]);
-        setMessage("");
+
+        // Scroll to details on mobile
+        setTimeout(() => {
+          document
+            .getElementById("admin-student-details")
+            ?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+        }, 100);
       } else {
-        setMessage(data.message);
+        showMessage(data.message || "Could not load user details.");
       }
     } catch (error) {
-      console.log(error);
-      setMessage("Could not load user details");
+      console.error(error);
+      showMessage("Unable to load student details.");
+    } finally {
+      setDetailsLoading(false);
     }
   };
 
+  // VIEW SUBJECT GRADES
+
   const viewGrades = async (resultId) => {
+    if (selectedResultId === resultId) {
+      setSelectedResultId(null);
+      setGrades([]);
+      return;
+    }
+
+    setGradesLoading(true);
+    setSelectedResultId(resultId);
+    setGrades([]);
+    setMessage("");
+
     try {
       const response = await fetch(
-        API_URL +
-          "/admin/result/" +
-          resultId +
-          "/grades"
+        `${API_URL}/admin/result/${resultId}/grades`
       );
 
       const data = await response.json();
 
       if (response.ok) {
-        setGrades(data);
+        setGrades(Array.isArray(data) ? data : []);
       } else {
-        setMessage(data.message);
+        showMessage(data.message || "Could not load grades.");
       }
     } catch (error) {
-      console.log(error);
-      setMessage("Could not load subject grades");
+      console.error(error);
+      showMessage("Unable to load subject grades.");
+    } finally {
+      setGradesLoading(false);
     }
   };
 
+  // DELETE USER
+
   const deleteUser = async (userId) => {
+    const user = users.find((item) => item.id === userId);
+
     const confirmed = window.confirm(
-      "Are you sure you want to delete this user and all their data?"
+      `Are you sure you want to permanently delete ${
+        user?.name || "this user"
+      } and all their academic records?`
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
+
+    setDeletingId(userId);
+    setMessage("");
 
     try {
       const response = await fetch(
-        API_URL + "/admin/user/" + userId,
+        `${API_URL}/admin/user/${userId}`,
         {
-          method: "DELETE"
+          method: "DELETE",
         }
       );
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message);
+        showMessage(
+          data.message || "User deleted successfully.",
+          "success"
+        );
 
-        setSelectedUser(null);
-        setUserResults([]);
-        setGrades([]);
+        if (selectedUser?.id === userId) {
+          setSelectedUser(null);
+          setUserResults([]);
+          setUserTranscript(null);
+          setGrades([]);
+          setSelectedResultId(null);
+        }
 
-        getUsers();
+        await getUsers();
       } else {
-        setMessage(data.message);
+        showMessage(data.message || "Could not delete user.");
       }
     } catch (error) {
-      console.log(error);
-      setMessage("Could not delete user");
+      console.error(error);
+      showMessage("Unable to delete user.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
-  return (
-    <div className="admin-dashboard">
+  // AVATAR INITIALS
 
-      <div className="admin-header">
-        <div>
-          <h1>Admin Dashboard</h1>
-          <p>Manage users and academic records</p>
+  const getInitials = (name = "") => {
+    return (
+      name
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part.charAt(0).toUpperCase())
+        .join("") || "U"
+    );
+  };
+
+  return (
+    <div className="adm-dashboard">
+
+      {/* HEADER */}
+
+      <header className="adm-header">
+        <div className="adm-header-content">
+
+          <div className="adm-brand">
+            <div className="adm-brand-icon">✦</div>
+
+            <div>
+              <span className="adm-brand-label">
+                STUDENT MANAGEMENT SYSTEM
+              </span>
+
+              <h1>Admin Dashboard</h1>
+
+              <p>
+                Manage students, academic records and performance.
+              </p>
+            </div>
+          </div>
+
+          <div className="adm-header-actions">
+            <span className="adm-admin-status">
+              <span className="adm-status-dot"></span>
+              Administrator
+            </span>
+
+            <button
+              className="adm-logout-btn"
+              onClick={handleAdminLogout}
+            >
+              <span>↪</span>
+              Logout
+            </button>
+          </div>
+
+        </div>
+      </header>
+
+      <main className="adm-main">
+
+        {/* WELCOME */}
+
+        <div className="adm-welcome">
+          <div>
+            <span className="adm-eyebrow">
+              OVERVIEW
+            </span>
+
+            <h2>Dashboard Overview</h2>
+
+            <p>
+              Monitor registered users and manage academic information.
+            </p>
+          </div>
+
+          <button
+            className="adm-refresh-btn"
+            onClick={getUsers}
+            disabled={loading}
+          >
+            <span>↻</span>
+            {loading ? "Refreshing..." : "Refresh Data"}
+          </button>
         </div>
 
-        <button
-          className="admin-logout-button"
-          onClick={handleAdminLogout}
-        >
-          Logout
-        </button>
-      </div>
+        {/* STATISTICS */}
 
-      {message && (
-        <p className="admin-message">
-          {message}
-        </p>
-      )}
+        <div className="adm-stats-grid">
 
-      <div className="admin-users-section">
+          <div className="adm-stat-card adm-stat-purple">
+            <div className="adm-stat-top">
+              <span className="adm-stat-icon">👥</span>
+              <span className="adm-stat-trend">ALL</span>
+            </div>
 
-        <h2>All Registered Users</h2>
+            <div className="adm-stat-number">
+              {stats.total}
+            </div>
 
-        {users.length === 0 ? (
-          <p>No users found.</p>
-        ) : (
+            <div className="adm-stat-label">
+              Total Registered Users
+            </div>
 
-          <div className="users-list">
-
-            {users.map((user) => (
-
-              <div
-                className="admin-user-card"
-                key={user.id}
-              >
-
-                <div className="admin-user-info">
-
-                  <h3>
-                    {user.name}
-                  </h3>
-
-                  <p>
-                    {user.email}
-                  </p>
-
-                  {user.is_admin === 1 && (
-                    <span className="admin-badge">
-                      Admin
-                    </span>
-                  )}
-
-                </div>
-
-                <div className="admin-actions">
-
-                  <button
-                    className="view-button"
-                    onClick={() => viewUser(user.id)}
-                  >
-                    View Details
-                  </button>
-
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    Delete User
-                  </button>
-
-                </div>
-
-              </div>
-
-            ))}
-
+            <div className="adm-stat-bottom">
+              All platform accounts
+            </div>
           </div>
 
+          <div className="adm-stat-card adm-stat-blue">
+            <div className="adm-stat-top">
+              <span className="adm-stat-icon">🎓</span>
+              <span className="adm-stat-trend">STUDENTS</span>
+            </div>
+
+            <div className="adm-stat-number">
+              {stats.students}
+            </div>
+
+            <div className="adm-stat-label">
+              Student Accounts
+            </div>
+
+            <div className="adm-stat-bottom">
+              Registered students
+            </div>
+          </div>
+
+          <div className="adm-stat-card adm-stat-cyan">
+            <div className="adm-stat-top">
+              <span className="adm-stat-icon">🛡</span>
+              <span className="adm-stat-trend">ADMINS</span>
+            </div>
+
+            <div className="adm-stat-number">
+              {stats.admins}
+            </div>
+
+            <div className="adm-stat-label">
+              Administrators
+            </div>
+
+            <div className="adm-stat-bottom">
+              Administrative accounts
+            </div>
+          </div>
+
+        </div>
+
+        {/* ALERT */}
+
+        {message && (
+          <div
+            className={`adm-alert adm-alert-${messageType}`}
+            role="alert"
+          >
+            <span>
+              {messageType === "success" ? "✓" : "⚠"}
+            </span>
+
+            <p>{message}</p>
+
+            <button
+              onClick={() => setMessage("")}
+              aria-label="Dismiss message"
+            >
+              ✕
+            </button>
+          </div>
         )}
 
-      </div>
+        {/* USERS SECTION */}
 
-      {selectedUser && (
+        <section className="adm-panel">
 
-        <div className="user-details">
+          <div className="adm-panel-heading">
+            <div>
+              <span className="adm-eyebrow">
+                USER MANAGEMENT
+              </span>
 
-          <h2>Student Profile & Academic Transcript</h2>
+              <h2>Registered Users</h2>
 
-          <div className="profile-info">
-            <p>
-              <strong>Name:</strong> {selectedUser.name}
-            </p>
-            <p>
-              <strong>Email:</strong> {selectedUser.email}
-            </p>
-            {userTranscript?.studentInfo?.registrationNo && (
               <p>
-                <strong>Registration No:</strong> {userTranscript.studentInfo.registrationNo}
+                View, search and manage platform accounts.
               </p>
-            )}
-            {userTranscript?.studentInfo?.fatherName && (
-              <p>
-                <strong>Father's Name:</strong> {userTranscript.studentInfo.fatherName}
-              </p>
-            )}
-            {userTranscript?.studentInfo?.program && (
-              <p>
-                <strong>Program:</strong> {userTranscript.studentInfo.program}
-              </p>
-            )}
+            </div>
 
-            {userTranscript ? (
-              <div style={{ marginTop: "14px", padding: "14px", background: "#f0fdf4", borderRadius: "8px", border: "1px solid #bbf7d0" }}>
-                <h4 style={{ margin: "0 0 8px 0", color: "#166534" }}>🎓 Saved Transcript Record (MySQL)</h4>
-                <div style={{ display: "flex", gap: "20px", fontSize: "0.95rem" }}>
-                  <span>CGPA: <strong style={{ color: "#15803d" }}>{userTranscript.cgpa}</strong></span>
-                  <span>Total Credits: <strong>{userTranscript.totalCredits}</strong></span>
-                  <span>Semesters: <strong>{userTranscript.semesters?.length || 0}</strong></span>
-                </div>
-
-                {userTranscript.semesters && (
-                  <div style={{ marginTop: "12px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                    {userTranscript.semesters.map((sem, sIdx) => (
-                      <details key={sIdx} style={{ background: "#fff", padding: "8px 12px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>
-                        <summary style={{ cursor: "pointer", fontWeight: "600", color: "#1e293b" }}>
-                          {sem.name} ({sem.subjects?.length || 0} subjects)
-                        </summary>
-                        <div style={{ marginTop: "8px", fontSize: "0.85rem" }}>
-                          {(sem.subjects || []).map((sub, subIdx) => (
-                            <div key={subIdx} style={{ display: "flex", justifyContent: "space-between", padding: "4px 0", borderBottom: "1px dashed #f1f5f9" }}>
-                              <span>{sub.code ? `${sub.code} - ` : ""}{sub.title}</span>
-                              <span><strong>{sub.grade || "In Progress"}</strong> ({sub.credits} CH)</span>
-                            </div>
-                          ))}
-                        </div>
-                      </details>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p style={{ marginTop: "10px", color: "#64748b", fontStyle: "italic" }}>
-                No multi-semester transcript saved to MySQL for this student yet.
-              </p>
-            )}
+            <span className="adm-count-badge">
+              {filteredUsers.length} Users
+            </span>
           </div>
 
-          <h2>GPA Results</h2>
+          {/* SEARCH AND FILTER */}
 
-          {userResults.length === 0 ? (
+          <div className="adm-toolbar">
 
-            <p>This user has not calculated GPA yet.</p>
+            <div className="adm-search-box">
+              <span className="adm-search-icon">⌕</span>
 
-          ) : (
+              <input
+                type="search"
+                placeholder="Search by name or email..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search users"
+              />
+            </div>
 
-            userResults.map((result) => (
-
-              <div
-                className="admin-result-card"
-                key={result.id}
+            <div className="adm-filter-tabs">
+              <button
+                className={filter === "all" ? "active" : ""}
+                onClick={() => setFilter("all")}
               >
+                All Users
+              </button>
 
-                <div>
+              <button
+                className={filter === "students" ? "active" : ""}
+                onClick={() => setFilter("students")}
+              >
+                Students
+              </button>
 
-                  <h3>
-                    GPA: {result.total_gpa}
-                  </h3>
+              <button
+                className={filter === "admins" ? "active" : ""}
+                onClick={() => setFilter("admins")}
+              >
+                Admins
+              </button>
+            </div>
 
-                  <p>
-                    Performance: {result.performance_level}
-                  </p>
+          </div>
 
-                </div>
+          {/* USERS LIST */}
 
-                <button
-                  className="grades-button"
-                  onClick={() => viewGrades(result.id)}
+          {loading ? (
+            <div className="adm-loading-state">
+              <div className="adm-loader"></div>
+              <p>Loading registered users...</p>
+            </div>
+          ) : filteredUsers.length === 0 ? (
+            <div className="adm-empty-state">
+              <div className="adm-empty-icon">⌕</div>
+
+              <h3>No users found</h3>
+
+              <p>
+                {search || filter !== "all"
+                  ? "Try changing your search or filter."
+                  : "No users are registered yet."}
+              </p>
+            </div>
+          ) : (
+            <div className="adm-users-list">
+
+              {filteredUsers.map((user) => (
+                <div
+                  className={`adm-user-card ${
+                    selectedUser?.id === user.id
+                      ? "adm-user-selected"
+                      : ""
+                  }`}
+                  key={user.id}
                 >
-                  View Subject Grades
-                </button>
 
-              </div>
+                  <div className="adm-user-profile">
 
-            ))
+                    <div className="adm-avatar">
+                      {getInitials(user.name)}
+                    </div>
 
-          )}
+                    <div className="adm-user-text">
+                      <div className="adm-user-name-row">
+                        <h3>{user.name || "Unnamed User"}</h3>
 
-          {grades.length > 0 && (
+                        <span
+                          className={
+                            isAdmin(user)
+                              ? "adm-role-badge adm-role-admin"
+                              : "adm-role-badge adm-role-student"
+                          }
+                        >
+                          {isAdmin(user) ? "Admin" : "Student"}
+                        </span>
+                      </div>
 
-            <div className="grades-section">
+                      <p>{user.email}</p>
 
-              <h2>Subject Grades</h2>
-
-              <div className="grades-list">
-
-                {grades.map((subject, index) => (
-
-                  <div
-                    className="admin-grade-row"
-                    key={index}
-                  >
-
-                    <span className="subject-name">
-                      {subject.subject_name}
-                    </span>
-
-                    <span className="subject-grade">
-                      Grade: {subject.grade}
-                    </span>
-
-                    <span className="subject-credit">
-                      Credits: {subject.credit_hours}
-                    </span>
+                      <span className="adm-user-id">
+                        User ID: #{user.id}
+                      </span>
+                    </div>
 
                   </div>
 
-                ))}
+                  <div className="adm-user-actions">
+
+                    <button
+                      className="adm-view-btn"
+                      onClick={() => viewUser(user.id)}
+                      disabled={detailsLoading}
+                    >
+                      View Details
+                      <span>→</span>
+                    </button>
+
+                    <button
+                      className="adm-delete-btn"
+                      onClick={() => deleteUser(user.id)}
+                      disabled={deletingId === user.id}
+                    >
+                      {deletingId === user.id
+                        ? "Deleting..."
+                        : "Delete"}
+                    </button>
+
+                  </div>
+
+                </div>
+              ))}
+
+            </div>
+          )}
+
+        </section>
+
+        {/* DETAILS LOADING */}
+
+        {detailsLoading && (
+          <div className="adm-panel adm-details-loading">
+            <div className="adm-loader"></div>
+            <p>Loading student academic records...</p>
+          </div>
+        )}
+
+        {/* STUDENT DETAILS */}
+
+        {selectedUser && (
+          <section
+            className="adm-panel adm-details-panel"
+            id="admin-student-details"
+          >
+
+            <div className="adm-panel-heading">
+
+              <div>
+                <span className="adm-eyebrow">
+                  STUDENT INFORMATION
+                </span>
+
+                <h2>Student Profile & Academic Records</h2>
+
+                <p>
+                  Detailed student information and saved performance.
+                </p>
+              </div>
+
+              <button
+                className="adm-close-btn"
+                onClick={() => {
+                  setSelectedUser(null);
+                  setUserResults([]);
+                  setUserTranscript(null);
+                  setGrades([]);
+                  setSelectedResultId(null);
+                }}
+              >
+                ✕ Close
+              </button>
+
+            </div>
+
+            {/* PROFILE */}
+
+            <div className="adm-profile-card">
+
+              <div className="adm-profile-header">
+
+                <div className="adm-avatar adm-avatar-large">
+                  {getInitials(selectedUser.name)}
+                </div>
+
+                <div>
+                  <h3>{selectedUser.name}</h3>
+                  <p>{selectedUser.email}</p>
+
+                  <span className="adm-role-badge adm-role-student">
+                    {isAdmin(selectedUser) ? "Admin" : "Student"}
+                  </span>
+                </div>
+
+              </div>
+
+              <div className="adm-profile-grid">
+
+                <div className="adm-info-item">
+                  <span>Registration Number</span>
+                  <strong>
+                    {userTranscript?.studentInfo?.registrationNo ||
+                      "Not provided"}
+                  </strong>
+                </div>
+
+                <div className="adm-info-item">
+                  <span>Father's Name</span>
+                  <strong>
+                    {userTranscript?.studentInfo?.fatherName ||
+                      "Not provided"}
+                  </strong>
+                </div>
+
+                <div className="adm-info-item">
+                  <span>Program</span>
+                  <strong>
+                    {userTranscript?.studentInfo?.program ||
+                      "Not provided"}
+                  </strong>
+                </div>
+
+                <div className="adm-info-item">
+                  <span>User ID</span>
+                  <strong>#{selectedUser.id}</strong>
+                </div>
 
               </div>
 
             </div>
 
-          )}
+            {/* TRANSCRIPT */}
 
-        </div>
+            <div className="adm-subsection">
 
-      )}
+              <div className="adm-subsection-heading">
+                <div>
+                  <h3>🎓 Academic Transcript</h3>
+                  <p>
+                    Saved multi-semester academic record.
+                  </p>
+                </div>
+              </div>
+
+              {userTranscript ? (
+                <div className="adm-transcript-card">
+
+                  <div className="adm-transcript-stats">
+
+                    <div className="adm-transcript-stat">
+                      <span>CGPA</span>
+                      <strong>
+                        {userTranscript.cgpa ?? "0.00"}
+                      </strong>
+                    </div>
+
+                    <div className="adm-transcript-stat">
+                      <span>Total Credits</span>
+                      <strong>
+                        {userTranscript.totalCredits ?? 0}
+                      </strong>
+                    </div>
+
+                    <div className="adm-transcript-stat">
+                      <span>Semesters</span>
+                      <strong>
+                        {userTranscript.semesters?.length || 0}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                  <div className="adm-semesters-list">
+
+                    {(userTranscript.semesters || []).map(
+                      (semester, index) => (
+                        <details
+                          className="adm-semester-details"
+                          key={semester.id || index}
+                        >
+
+                          <summary>
+                            <span className="adm-semester-icon">
+                              📚
+                            </span>
+
+                            <span className="adm-semester-name">
+                              {semester.name ||
+                                `Semester ${index + 1}`}
+                            </span>
+
+                            <span className="adm-semester-count">
+                              {semester.subjects?.length || 0} Subjects
+                            </span>
+
+                            <span className="adm-chevron">⌄</span>
+                          </summary>
+
+                          <div className="adm-semester-content">
+
+                            <div className="adm-table-scroll">
+
+                              <table className="adm-subject-table">
+                                <thead>
+                                  <tr>
+                                    <th>Code</th>
+                                    <th>Subject</th>
+                                    <th>Credits</th>
+                                    <th>Grade</th>
+                                  </tr>
+                                </thead>
+
+                                <tbody>
+                                  {(semester.subjects || []).map(
+                                    (subject, subjectIndex) => (
+                                      <tr
+                                        key={
+                                          subject.id || subjectIndex
+                                        }
+                                      >
+                                        <td>
+                                          {subject.code || "—"}
+                                        </td>
+
+                                        <td>
+                                          {subject.title || "—"}
+                                        </td>
+
+                                        <td>
+                                          {subject.credits ?? 0}
+                                        </td>
+
+                                        <td>
+                                          <span className="adm-grade-badge">
+                                            {subject.grade || "Pending"}
+                                          </span>
+                                        </td>
+                                      </tr>
+                                    )
+                                  )}
+                                </tbody>
+                              </table>
+
+                            </div>
+
+                          </div>
+
+                        </details>
+                      )
+                    )}
+
+                  </div>
+
+                </div>
+              ) : (
+                <div className="adm-empty-record">
+                  <span>📄</span>
+                  <p>
+                    No saved multi-semester transcript found
+                    for this student.
+                  </p>
+                </div>
+              )}
+
+            </div>
+
+            {/* GPA RESULTS */}
+
+            <div className="adm-subsection">
+
+              <div className="adm-subsection-heading">
+                <div>
+                  <h3>📊 GPA Results</h3>
+                  <p>
+                    Student GPA calculation history.
+                  </p>
+                </div>
+
+                <span className="adm-count-badge">
+                  {userResults.length} Results
+                </span>
+              </div>
+
+              {userResults.length === 0 ? (
+                <div className="adm-empty-record">
+                  <span>📈</span>
+                  <p>
+                    This student has not calculated GPA yet.
+                  </p>
+                </div>
+              ) : (
+                <div className="adm-results-list">
+
+                  {userResults.map((result) => (
+                    <div
+                      className="adm-result-card"
+                      key={result.id}
+                    >
+
+                      <div className="adm-result-main">
+
+                        <div className="adm-result-icon">
+                          📈
+                        </div>
+
+                        <div>
+                          <span className="adm-result-label">
+                            GPA RESULT
+                          </span>
+
+                          <h4>
+                            GPA: {result.total_gpa}
+                          </h4>
+
+                          <p>
+                            Performance:{" "}
+                            <strong>
+                              {result.performance_level ||
+                                "Not available"}
+                            </strong>
+                          </p>
+                        </div>
+
+                      </div>
+
+                      <button
+                        className="adm-grades-btn"
+                        onClick={() => viewGrades(result.id)}
+                      >
+                        {selectedResultId === result.id
+                          ? "Hide Grades"
+                          : "View Grades"}
+                      </button>
+
+                      {selectedResultId === result.id && (
+                        <div className="adm-result-grades">
+
+                          {gradesLoading ? (
+                            <div className="adm-inline-loading">
+                              Loading subject grades...
+                            </div>
+                          ) : grades.length === 0 ? (
+                            <p className="adm-no-grades">
+                              No subject grades found.
+                            </p>
+                          ) : (
+                            <div className="adm-table-scroll">
+
+                              <table className="adm-subject-table">
+                                <thead>
+                                  <tr>
+                                    <th>Subject</th>
+                                    <th>Grade</th>
+                                    <th>Credits</th>
+                                  </tr>
+                                </thead>
+
+                                <tbody>
+                                  {grades.map((subject, index) => (
+                                    <tr key={index}>
+                                      <td>
+                                        {subject.subject_name}
+                                      </td>
+
+                                      <td>
+                                        <span className="adm-grade-badge">
+                                          {subject.grade}
+                                        </span>
+                                      </td>
+
+                                      <td>
+                                        {subject.credit_hours}
+                                      </td>
+                                    </tr>
+                                  ))}
+                                </tbody>
+                              </table>
+
+                            </div>
+                          )}
+
+                        </div>
+                      )}
+
+                    </div>
+                  ))}
+
+                </div>
+              )}
+
+            </div>
+
+          </section>
+        )}
+
+        {/* FOOTER */}
+
+        <footer className="adm-footer">
+          <span>
+            © {new Date().getFullYear()} Student Management System
+          </span>
+
+          <span>
+            Administration Panel
+          </span>
+        </footer>
+
+      </main>
 
     </div>
   );
