@@ -245,10 +245,15 @@
 
   html,
   body,
-  #root {
+  #root,
+  .dashboard-page,
+  .tab-view-container,
+  .transcript-tab-content {
     margin: 0 !important;
     padding: 0 !important;
     background: white !important;
+    box-shadow: none !important;
+    border: none !important;
   }
 
   .transcript-wrapper {
@@ -284,10 +289,35 @@
   }
 
   button,
+  .big-print-btn,
   .navbar,
   .sidebar,
-  .dashboard-header {
+  .dashboard-header,
+  .welcome-card,
+  .helper-actions,
+  .no-print,
+  .manager-header-card,
+  .modal-overlay,
+  .profile-dropdown-menu,
+  .semester-tabs-container {
     display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .uet-official-header,
+  .uet-title,
+  .uet-location,
+  .uet-reg-no-line,
+  .uet-transcript-banner,
+  .uet-student-details-block {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
 

@@ -167,7 +167,7 @@ const pages = useMemo(() => {
             {/* Header only on first page */}
             {pageIndex === 0 && (
               <>
-                <header className="uet-official-header">
+                <div className="uet-official-header">
                   <h1 className="uet-title">
                     University of Engineering & Technology
                   </h1>
@@ -180,7 +180,7 @@ const pages = useMemo(() => {
                     <strong>Registration No: </strong>
                     {studentInfo.registrationNo || "No Data"}
                   </div>
-                </header>
+                </div>
 
                 <div className="uet-transcript-banner">
                   TRANSCRIPT

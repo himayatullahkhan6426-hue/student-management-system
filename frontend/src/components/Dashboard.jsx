@@ -26,18 +26,21 @@ function extractRegNo(email) {
 }
 
 function Dashboard({ user, handleLogout }) {
-  const [activeTab, setActiveTab] = useState("transcript");
-  const [showDeptModal, setShowDeptModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("semesters");
   const [cloudStatus, setCloudStatus] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-
-
 
   // User-isolated storage keys
   const userId = user?.id || "guest";
   const STORAGE_KEY_SEMESTERS = `uet_transcript_semesters_${userId}`;
   const STORAGE_KEY_STUDENT = `uet_transcript_student_${userId}`;
   const STORAGE_KEY_DEPT = `uet_transcript_dept_${userId}`;
+
+  // Ask student for department first if not already saved
+  const [showDeptModal, setShowDeptModal] = useState(() => {
+    const savedDept = localStorage.getItem(STORAGE_KEY_DEPT);
+    return !savedDept;
+  });
 
   // Department State
   const [currentDepartment, setCurrentDepartment] = useState(() => {
@@ -59,16 +62,18 @@ function Dashboard({ user, handleLogout }) {
         console.error("Failed to parse saved student info", e);
       }
     }
-    // For every other student, initialize their own clean record
+    const savedDeptId = localStorage.getItem(STORAGE_KEY_DEPT) || "se";
+    const initialDept = DEPARTMENTS.find((d) => d.id === savedDeptId) || DEPARTMENTS[0];
     return {
       studentName: user?.name || "",
       fatherName: "",
       registrationNo: extractRegNo(user?.email) || "",
-      program: "",
-      plan: "",
-      universityName: "",
-      universityLocation: "",
-      department: "",
+      program: initialDept.program,
+      plan: initialDept.plan,
+      universityName: "University of Engineering & Technology",
+      universityLocation: "Peshawar, Pakistan",
+      department: initialDept.id,
+      departmentName: initialDept.name,
       issueDate: "__/__/202__",
       resultDeclarationDate: "__/__/202__",
       preparedBy: "",
@@ -78,6 +83,8 @@ function Dashboard({ user, handleLogout }) {
   });
 
   // Semesters Data State - Personalized for this user
+  // If Software Engineering: automatically loads full 8-semester scheme.
+  // If other department: clears all semesters to start fresh with manual additions.
   const [rawSemesters, setRawSemesters] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY_SEMESTERS);
     if (saved) {
@@ -87,19 +94,11 @@ function Dashboard({ user, handleLogout }) {
         console.error("Failed to parse saved semesters", e);
       }
     }
-    return [
-      {
-        id: "sem-1",
-        name: "Semester 1",
-        subjects: [
-          { id: "sub-1", code: "SE 101", title: "Information & Comm Technologies", credits: 2.0, grade: "" },
-          { id: "sub-2", code: "SE 101L", title: "ICT Lab", credits: 1.0, grade: "" },
-          { id: "sub-3", code: "SE 102", title: "Computer Programming", credits: 3.0, grade: "" },
-          { id: "sub-4", code: "BSI 101", title: "Islamic Studies", credits: 2.0, grade: "" },
-          { id: "sub-5", code: "BSI 173", title: "Calculus & Analytic Geometry", credits: 3.0, grade: "" },
-        ],
-      },
-    ];
+    const savedDept = localStorage.getItem(STORAGE_KEY_DEPT);
+    if (savedDept && savedDept !== "se") {
+      return [];
+    }
+    return FULL_8_SEMESTER_SE_TRANSCRIPT.semesters;
   });
 
   // Load from MySQL database for this student on login
@@ -157,112 +156,39 @@ function Dashboard({ user, handleLogout }) {
   // Handle department change
   const handleSelectDepartment = (dept) => {
     setCurrentDepartment(dept);
-    setStudentInfo((prev) => ({
-      ...prev,
+    localStorage.setItem(STORAGE_KEY_DEPT, dept.id);
+
+    const updatedInfo = {
+      ...studentInfo,
+      department: dept.id,
+      departmentName: dept.name,
       program: dept.program,
       plan: dept.plan,
-      department: dept.id,
-    }));
-
-    if (
-      dept.id !== "se" &&
-      window.confirm(
-        `Switched to ${dept.name}! Would you like to load the ${dept.name} starter scheme of studies?`
-      )
-    ) {
-      // Create empty starter for that department
-      const starter = [
-        {
-          id: `sem-starter-${dept.id}-1`,
-          name: "Semester 1",
-          subjects: [
-            {
-              id: "sub-init-1",
-              code: `${dept.code}-101`,
-              title: "Introduction to Engineering / Computing",
-              credits: 3.0,
-              grade: "A",
-            },
-          ],
-        },
-      ];
-      setRawSemesters(starter);
-    }
-  };
-
-  // Load 4-Semester Actual Transcript
-  const handleLoadSample = () => {
-    if (
-      window.confirm(
-        "Load actual 4-Semester Transcript record of Software Engineering?"
-      )
-    ) {
-      setRawSemesters(SAMPLE_TRANSCRIPT.semesters);
-    }
-  };
-
-  // Load Full 8-Semester Software Engineering Scheme (from screenshots 1 & 2)
-  const handleLoadFull8Semesters = () => {
-    if (
-      window.confirm(
-        "Load the full 8-Semester Software Engineering Scheme of Studies (Semesters 1-8, 135 Credit Hours)?"
-      )
-    ) {
-      setRawSemesters(FULL_8_SEMESTER_SE_TRANSCRIPT.semesters);
-      setStudentInfo((prev) => ({
-        ...prev,
-        program: "BS Software Engineering",
-        plan: "BS Software Engineering Major",
-      }));
-    }
-  };
-
-  // Add individual course from scheme to current active semester
-  const handleAddCourseToSemester = (course, semesterName) => {
-    let targetSem = rawSemesters.find((s) => s.name === semesterName);
-    if (!targetSem) {
-      targetSem = rawSemesters[rawSemesters.length - 1] || rawSemesters[0];
-    }
-    const newCourseObj = {
-      id: "course-" + Date.now() + Math.random(),
-      code: course.code,
-      title: course.title,
-      credits: course.credits,
-      grade: "A",
     };
-    const updated = rawSemesters.map((s) => {
-      if (s.id === targetSem.id) {
-        return { ...s, subjects: [...s.subjects, newCourseObj] };
-      }
-      return s;
-    });
-    setRawSemesters(updated);
-    alert(`Added "${course.code}: ${course.title}" (${course.credits} CH) to ${targetSem.name}!`);
+    setStudentInfo(updatedInfo);
+    try {
+      localStorage.setItem(STORAGE_KEY_STUDENT, JSON.stringify(updatedInfo));
+    } catch (e) { }
+
+    if (dept.id === "se") {
+      // If Software Engineering: automatically loads full 8-semester scheme
+      setRawSemesters(FULL_8_SEMESTER_SE_TRANSCRIPT.semesters);
+    } else {
+      // If NOT Software Engineering: clear all semester sections and prompt manual addition
+      setRawSemesters([]);
+    }
+
+    setShowDeptModal(false);
   };
 
-  // Reset all semesters
+  // Reset all semesters (clears all semesters for fresh manual entry)
   const handleReset = () => {
     if (
       window.confirm(
-        "Are you sure you want to clear all semesters? You will start with a single empty semester."
+        "Are you sure you want to clear all semesters? You can add your semesters manually."
       )
     ) {
-      const emptyInitial = [
-        {
-          id: "sem-" + Date.now(),
-          name: "Semester 1",
-          subjects: [
-            {
-              id: "sub-" + Date.now(),
-              code: "SE-101",
-              title: "Introduction to Computing",
-              credits: 3.0,
-              grade: "A",
-            },
-          ],
-        },
-      ];
-      setRawSemesters(emptyInitial);
+      setRawSemesters([]);
       setActiveTab("semesters");
     }
   };
@@ -325,9 +251,9 @@ function Dashboard({ user, handleLogout }) {
         setActiveTab={setActiveTab}
         currentDepartment={currentDepartment}
       />
-     
 
-{/* Contents with Navigation and Department Changer */}
+
+      {/* Contents with Navigation and Department Changer */}
       <Contents
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -355,45 +281,15 @@ function Dashboard({ user, handleLogout }) {
         {/* 1. Official Transcript View */}
         {activeTab === "transcript" && (
           <div className="transcript-tab-content">
-            {/* Quick Actions Helper */}
-              <div className="helper-actions">
-                <button
-                  type="button"
-                  className="action-btn success-btn small"
-                  onClick={handleSaveToCloud}
-                  disabled={isSaving}
-                  title="Save this transcript to database for your user account"
-                  style={{ background: "#10b981", color: "#fff", fontWeight: "700" }}
-                >
-                  {isSaving ? "⏳ Saving..." : "💾 Save to Database"}
-                </button>
-                <button
-                  type="button"
-                  className="action-btn secondary-btn small"
-                  onClick={handleLoadFull8Semesters}
-                  title="Load full 8-semester Software Engineering scheme"
-                >
-                  🎓 Load Full 8-Sem Scheme
-                </button>
-                <button
-                  type="button"
-                  className="action-btn secondary-btn small"
-                  onClick={handleLoadSample}
-                  title="Load actual 4-semester transcript from photo"
-                >
-                  📋 Load 4-Semesters
-                </button>
-                <button
-                    type="button"
-                    className="action-btn print-btn"
-                    onClick={handlePrint}
-                    title="Open print dialog to print or save as PDF"
-                    >
-                      Print / Save as PDF
-                </button>
-              </div>
-            
-
+            {/* Direct Big Print / Save as PDF Button covering the full area */}
+            <button
+              type="button"
+              className="big-print-btn no-print"
+              onClick={handlePrint}
+              title="Open print dialog to print or save as PDF"
+            >
+              Print / Save as PDF
+            </button>
             <TranscriptView
               studentInfo={studentInfo}
               semesters={calculatedSemesters}
@@ -407,13 +303,12 @@ function Dashboard({ user, handleLogout }) {
           <SemesterManager
             semesters={calculatedSemesters}
             setSemesters={setRawSemesters}
-            onLoadSample={handleLoadSample}
-            onLoadFull8Semesters={handleLoadFull8Semesters}
             onReset={handleReset}
             currentDepartment={currentDepartment}
             onOpenDeptModal={() => setShowDeptModal(true)}
             onSaveToCloud={handleSaveToCloud}
             isSaving={isSaving}
+            onViewTranscript={() => setActiveTab("transcript")}
           />
         )}
 

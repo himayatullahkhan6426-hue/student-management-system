@@ -1,4 +1,5 @@
 import React from "react";
+import { DEPARTMENTS } from "../utils/departmentSchemes";
 
 function StudentInfoEditor({ studentInfo, setStudentInfo }) {
   const handleChange = (field, value) => {
@@ -6,6 +7,19 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
       ...prev,
       [field]: value,
     }));
+  };
+
+  const handleDepartmentChange = (deptId) => {
+    const dept = DEPARTMENTS.find((d) => d.id === deptId);
+    if (dept) {
+      setStudentInfo((prev) => ({
+        ...prev,
+        department: dept.id,
+        departmentName: dept.name,
+        program: dept.program,
+        plan: dept.plan,
+      }));
+    }
   };
 
   return (
@@ -55,6 +69,21 @@ function StudentInfoEditor({ studentInfo, setStudentInfo }) {
               value={studentInfo.registrationNo || ""}
               onChange={(e) => handleChange("registrationNo", e.target.value)}
             />
+          </div>
+
+          <div className="input-field-group">
+            <label>Academic Department</label>
+            <select
+              className="text-input"
+              value={studentInfo.department || "se"}
+              onChange={(e) => handleDepartmentChange(e.target.value)}
+            >
+              {DEPARTMENTS.map((dept) => (
+                <option key={dept.id} value={dept.id}>
+                  {dept.name} ({dept.code})
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="input-field-group">

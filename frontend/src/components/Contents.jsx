@@ -31,15 +31,7 @@ function Contents({
           className={`nav-tab-item ${activeTab === "semesters" ? "active" : ""}`}
           onClick={() => setActiveTab("semesters")}
         >
-          📝Subjects
-        </button>
-
-        <button
-          type="button"
-          className={`nav-tab-item ${activeTab === "transcript" ? "active" : ""}`}
-          onClick={() => setActiveTab("transcript")}
-        >
-          📄 Transcript
+          📝 Subjects
         </button>
 
         <button
