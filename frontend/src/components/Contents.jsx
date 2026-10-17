@@ -31,7 +31,7 @@ function Contents({
           className={`nav-tab-item ${activeTab === "semesters" ? "active" : ""}`}
           onClick={() => setActiveTab("semesters")}
         >
-          📝 Semesters & Subjects
+          📝Subjects
         </button>
 
         <button
@@ -39,9 +39,9 @@ function Contents({
           className={`nav-tab-item ${activeTab === "transcript" ? "active" : ""}`}
           onClick={() => setActiveTab("transcript")}
         >
-          📄 Transcript Preview
+          📄 Transcript
         </button>
-        
+
         <button
           type="button"
           className={`nav-tab-item ${activeTab === "planner" ? "active" : ""}`}
@@ -75,7 +75,7 @@ function Contents({
             {isSaving ? "⏳ Saving..." : "💾 Save to Cloud"}
           </button>
         )}
-        
+
       </div>
     </header>
   );

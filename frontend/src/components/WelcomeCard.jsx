@@ -74,7 +74,6 @@ function WelcomeCard({
       </div>
 
       <div className="welcome-avatar-side" ref={menuRef}>
-        <div className="profile-avatar-trigger-container">
           <button
             type="button"
             className={`profile-avatar-btn ${isProfileActive ? "profile-active-tab" : ""} ${isMenuOpen ? "menu-open" : ""}`}
@@ -88,10 +87,9 @@ function WelcomeCard({
               {isProfileActive && (
                 <span className="avatar-online-dot" title="Student Profile Active" />
               )}
-              
+
             </div>
           </button>
-        </div>
 
         {/* Professional Profile Dropdown Popover */}
         {isMenuOpen && (
@@ -137,7 +135,7 @@ function WelcomeCard({
             <div className="profile-dropdown-divider" />
 
             {/* Navigation item: Student Profile */}
-            <div className="profile-menu-actions">
+          
               <button
                 type="button"
                 className={`profile-action-btn ${isProfileActive ? "active" : ""}`}
@@ -159,7 +157,6 @@ function WelcomeCard({
                   <span className="profile-action-arrow">→</span>
                 )}
               </button>
-            </div>
 
             <div className="profile-dropdown-divider" />
 
