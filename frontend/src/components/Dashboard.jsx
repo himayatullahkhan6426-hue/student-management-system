@@ -11,8 +11,9 @@ import {
   SAMPLE_TRANSCRIPT,
   FULL_8_SEMESTER_SE_TRANSCRIPT,
   calculateAllSemesters,
+  getOfficialTranscriptForDepartment,
 } from "../utils/gradeCalculations";
-import { DEPARTMENTS, createSemestersFromScheme, SOFTWARE_ENGINEERING_SCHEME } from "../utils/departmentSchemes";
+import { DEPARTMENTS, createSemestersFromScheme, getDepartmentScheme } from "../utils/departmentSchemes";
 import html2pdf from "html2pdf.js";
 
 const API_URL = "https://student-management-system-d4cj.onrender.com";
@@ -85,22 +86,26 @@ function Dashboard({ user, handleLogout }) {
   });
 
   // Semesters Data State - Personalized for this user
-  // If Software Engineering: automatically loads full 8-semester scheme.
-  // If other department: clears all semesters to start fresh with manual additions.
+  // If department has an official scheme (SE, Chemical, Civil), automatically loads their full 8-semester scheme.
   const [rawSemesters, setRawSemesters] = useState(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_SEMESTERS);
+    const savedDept = localStorage.getItem(STORAGE_KEY_DEPT) || "se";
+    const deptStorageKey = `${STORAGE_KEY_SEMESTERS}_${savedDept}`;
+    const saved = localStorage.getItem(deptStorageKey) || localStorage.getItem(STORAGE_KEY_SEMESTERS);
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
       } catch (e) {
         console.error("Failed to parse saved semesters", e);
       }
     }
-    const savedDept = localStorage.getItem(STORAGE_KEY_DEPT);
-    if (savedDept && savedDept !== "se") {
-      return [];
+    const officialTranscript = getOfficialTranscriptForDepartment(savedDept);
+    if (officialTranscript) {
+      return officialTranscript.semesters;
     }
-    return FULL_8_SEMESTER_SE_TRANSCRIPT.semesters;
+    return [];
   });
 
   // Load from MySQL database for this student on login
@@ -138,10 +143,13 @@ function Dashboard({ user, handleLogout }) {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY_SEMESTERS, JSON.stringify(rawSemesters));
+      if (currentDepartment?.id) {
+        localStorage.setItem(`${STORAGE_KEY_SEMESTERS}_${currentDepartment.id}`, JSON.stringify(rawSemesters));
+      }
     } catch (e) {
       console.error("Error saving semesters to localStorage", e);
     }
-  }, [rawSemesters]);
+  }, [rawSemesters, currentDepartment?.id]);
 
   useEffect(() => {
     try {
@@ -172,25 +180,43 @@ function Dashboard({ user, handleLogout }) {
       localStorage.setItem(STORAGE_KEY_STUDENT, JSON.stringify(updatedInfo));
     } catch (e) { }
 
-    if (dept.id === "se") {
-      // If Software Engineering: automatically loads full 8-semester scheme
-      setRawSemesters(FULL_8_SEMESTER_SE_TRANSCRIPT.semesters);
+    // Check if user previously saved semesters for this department
+    const deptStorageKey = `${STORAGE_KEY_SEMESTERS}_${dept.id}`;
+    const savedForDept = localStorage.getItem(deptStorageKey);
+    if (savedForDept) {
+      try {
+        const parsed = JSON.parse(savedForDept);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setRawSemesters(parsed);
+          setShowDeptModal(false);
+          return;
+        }
+      } catch (e) {}
+    }
+
+    const officialTranscript = getOfficialTranscriptForDepartment(dept.id);
+    if (officialTranscript) {
+      setRawSemesters(officialTranscript.semesters);
     } else {
-      // If NOT Software Engineering: clear all semester sections and prompt manual addition
       setRawSemesters([]);
     }
 
     setShowDeptModal(false);
   };
 
-  // Reset all semesters (clears all semesters for fresh manual entry)
+  // Reset all semesters (resets to official scheme if available, or clears all)
   const handleReset = () => {
-    if (
-      window.confirm(
-        "Are you sure you want to clear all semesters? You can add your semesters manually."
-      )
-    ) {
-      setRawSemesters([]);
+    const officialTranscript = getOfficialTranscriptForDepartment(currentDepartment?.id);
+    const confirmMsg = officialTranscript
+      ? `Are you sure you want to reset all semesters to the official ${currentDepartment.name} curriculum? All courses and grades will be reset.`
+      : "Are you sure you want to clear all semesters? You can add your semesters manually.";
+
+    if (window.confirm(confirmMsg)) {
+      if (officialTranscript) {
+        setRawSemesters(officialTranscript.semesters);
+      } else {
+        setRawSemesters([]);
+      }
       setActiveTab("semesters");
     }
   };

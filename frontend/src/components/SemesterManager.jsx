@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { GRADE_OPTIONS, GRADE_POINTS } from "../utils/gradeCalculations";
-import { SOFTWARE_ENGINEERING_SCHEME } from "../utils/departmentSchemes";
+import {
+  SOFTWARE_ENGINEERING_SCHEME,
+  getDepartmentScheme,
+} from "../utils/departmentSchemes";
 
 function SemesterManager({
   semesters,
@@ -16,6 +19,10 @@ function SemesterManager({
   const [showAddSemesterModal, setShowAddSemesterModal] = useState(false);
   const [activeTabId, setActiveTabId] = useState(semesters[0]?.id || "");
   const [showQuickAddSchemeModal, setShowQuickAddSchemeModal] = useState(false);
+
+  const officialScheme = getDepartmentScheme(currentDepartment?.id);
+  const hasOfficialScheme = Boolean(officialScheme);
+  const activeScheme = officialScheme || SOFTWARE_ENGINEERING_SCHEME;
 
   // Fallback to first semester if active tab is invalid
   const currentSemester = semesters.find((s) => s.id === activeTabId) || semesters[0];
@@ -195,12 +202,12 @@ function SemesterManager({
           <div className="manager-title-box">
             <h2 className="heading">Semester & Course Administration</h2>
             <p className="sub-desc">
-              Manually enter subjects, course codes, credit hours, and grades. All GPAs and overall CGPA update in real-time.
+              Manually enter grades for courses, or modify codes and credits. All SGPA and cumulative CGPA update in real-time.
             </p>
           </div>
 
           <div className="manager-action-buttons">
-            {currentDepartment?.id !== "se" && (
+            {!hasOfficialScheme && (
               <button
                 type="button"
                 className="action-btn secondary-btn"
@@ -217,16 +224,14 @@ function SemesterManager({
             >
               📥 Export CSV
             </button>
-            {currentDepartment?.id !== "se" && (
-              <button
-                type="button"
-                className="action-btn danger-outline-btn"
-                onClick={onReset}
-                title="Clear all courses and start fresh"
-              >
-                🔄 Reset All
-              </button>
-            )}
+            <button
+              type="button"
+              className="action-btn danger-outline-btn"
+              onClick={onReset}
+              title={hasOfficialScheme ? "Reset to official curriculum outline" : "Clear all courses and start fresh"}
+            >
+              🔄 {hasOfficialScheme ? "Reset to Official Scheme" : "Reset All"}
+            </button>
           </div>
         </div>
       </div>
@@ -295,7 +300,7 @@ function SemesterManager({
           <div className="modal-content modal-lg" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <h3>Select Course from Official Scheme of Studies</h3>
+                <h3>Select Course from Official Scheme of Studies ({currentDepartment?.name})</h3>
                 <p className="sub-desc" style={{ margin: "4px 0 0 0" }}>
                   Click any course below to add it directly to {currentSemester?.name}.
                 </p>
@@ -309,9 +314,9 @@ function SemesterManager({
               </button>
             </div>
             <div className="modal-body scheme-course-picker-list">
-              {SOFTWARE_ENGINEERING_SCHEME.map((sem) => (
+              {activeScheme.map((sem) => (
                 <div key={sem.name} className="picker-sem-group">
-                  <h4 className="picker-sem-title">{sem.name} ({sem.term})</h4>
+                  <h4 className="picker-sem-title">{sem.name} {sem.term ? `(${sem.term})` : ""}</h4>
                   <div className="picker-courses-grid">
                     {sem.courses.map((c) => (
                       <div
@@ -341,7 +346,7 @@ function SemesterManager({
         </div>
       )}
 
-      {/* If no semesters exist (e.g. non-SE department cleared), show prompt to add semester manually */}
+      {/* If no semesters exist (e.g. non-scheme department cleared), show prompt to add semester manually */}
       {semesters.length === 0 ? (
         <div className="empty-semesters-card Box" style={{ textAlign: "center", padding: "60px 24px", margin: "20px auto", maxWidth: "680px" }}>
           <div style={{ fontSize: "3.5rem", marginBottom: "16px" }}>📚</div>
@@ -349,16 +354,28 @@ function SemesterManager({
             No Semesters Added for {currentDepartment?.name || "Selected Department"}
           </h3>
           <p style={{ color: "#64748b", fontSize: "1rem", lineHeight: "1.6", marginBottom: "26px" }}>
-            All semester records are clear. Please manually add your semesters and courses by clicking the <strong>"+ Add Semester"</strong> button below.
+            All semester records are clear. Please manually add your semesters and courses or reload the official curriculum.
           </p>
-          <button
-            type="button"
-            className="action-btn primary-btn"
-            onClick={() => setShowAddSemesterModal(true)}
-            style={{ padding: "12px 28px", fontSize: "1rem", display: "inline-flex" }}
-          >
-            ➕ Add Semester
-          </button>
+          <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+            <button
+              type="button"
+              className="action-btn primary-btn"
+              onClick={() => setShowAddSemesterModal(true)}
+              style={{ padding: "12px 28px", fontSize: "1rem", display: "inline-flex" }}
+            >
+              ➕ Add Semester
+            </button>
+            {hasOfficialScheme && (
+              <button
+                type="button"
+                className="action-btn secondary-btn"
+                onClick={onReset}
+                style={{ padding: "12px 28px", fontSize: "1rem", display: "inline-flex" }}
+              >
+                🔄 Load Official {currentDepartment?.name} Scheme
+              </button>
+            )}
+          </div>
         </div>
       ) : (
         <>
@@ -388,7 +405,7 @@ function SemesterManager({
                   </div>
                 );
               })}
-              {currentDepartment?.id !== "se" && (
+              {!hasOfficialScheme && (
                 <button
                   type="button"
                   className="add-sem-tab-quick"
@@ -451,7 +468,7 @@ function SemesterManager({
                   </div>
 
                   {/* Delete Semester */}
-                  {currentDepartment?.id !== "se" && (
+                  {!hasOfficialScheme && (
                     <button
                       type="button"
                       className="delete-sem-btn"
@@ -469,14 +486,14 @@ function SemesterManager({
 
               {/* Subjects Table List */}
               <div className="subjects-table-manager">
-                <div className={`table-header-row ${currentDepartment?.id === "se" ? "no-action-col" : ""}`}>
+                <div className={`table-header-row ${hasOfficialScheme ? "no-action-col" : ""}`}>
                   <div className="th-num">#</div>
                   <div className="th-code">Course Code</div>
                   <div className="th-title">Course Title / Subject</div>
                   <div className="th-credits">Credit Hours (CH)</div>
                   <div className="th-grade">Grade</div>
                   <div className="th-points">Points (CH × GP)</div>
-                  {currentDepartment?.id !== "se" && <div className="th-action">Action</div>}
+                  {!hasOfficialScheme && <div className="th-action">Action</div>}
                 </div>
 
                 <div className="table-body-rows">
@@ -489,7 +506,7 @@ function SemesterManager({
                     const points = gp !== null ? (credits * gp).toFixed(2) : "--";
 
                     return (
-                      <div key={sub.id || idx} className={`subject-edit-row ${currentDepartment?.id === "se" ? "no-action-col" : ""}`}>
+                      <div key={sub.id || idx} className={`subject-edit-row ${hasOfficialScheme ? "no-action-col" : ""}`}>
                         <div className="td-num">
                           <span className="sub-idx-circle">{String(idx + 1).padStart(2, "0")}</span>
                         </div>
@@ -498,7 +515,7 @@ function SemesterManager({
                           <input
                             type="text"
                             className="sub-input code-input"
-                            placeholder="e.g. SE 102"
+                            placeholder="e.g. CHE-144"
                             value={sub.code}
                             onChange={(e) =>
                               handleSubjectChange(currentSemester.id, sub.id, "code", e.target.value)
@@ -510,7 +527,7 @@ function SemesterManager({
                           <input
                             type="text"
                             className="sub-input title-input"
-                            placeholder="e.g. Computer Programming"
+                            placeholder="e.g. Course Title"
                             value={sub.title}
                             onChange={(e) =>
                               handleSubjectChange(currentSemester.id, sub.id, "title", e.target.value)
@@ -558,7 +575,7 @@ function SemesterManager({
                           <span className="points-text">{points}</span>
                         </div>
 
-                        {currentDepartment?.id !== "se" && (
+                        {!hasOfficialScheme && (
                           <div className="td-action">
                             <button
                               type="button"
@@ -600,7 +617,7 @@ function SemesterManager({
               </div>
 
               {/* Add Subject Button Bar */}
-              {currentDepartment?.id !== "se" ? (
+              {!hasOfficialScheme ? (
                 <div className="add-subject-bar">
                   <div className="add-subject-actions">
                     <button
@@ -630,8 +647,18 @@ function SemesterManager({
                 </div>
               ) : (
                 <div className="add-subject-bar">
+                  <div className="add-subject-actions" style={{ display: "flex", gap: "10px" }}>
+                    <button
+                      type="button"
+                      className="action-btn secondary-btn small"
+                      onClick={() => setShowQuickAddSchemeModal(true)}
+                      title="Add an elective or repeat course from official scheme"
+                    >
+                      📖 Add Course from Scheme
+                    </button>
+                  </div>
                   <span className="total-subjects-count" style={{ marginLeft: "auto" }}>
-                    {currentSemester.subjects.length} Courses in {currentSemester.name} (Official Curriculum)
+                    {currentSemester.subjects.length} Courses in {currentSemester.name} (Official {currentDepartment?.name} Curriculum)
                   </span>
                 </div>
               )}

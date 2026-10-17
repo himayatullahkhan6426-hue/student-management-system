@@ -1,4 +1,9 @@
-import { SOFTWARE_ENGINEERING_SCHEME } from "./departmentSchemes";
+import {
+  SOFTWARE_ENGINEERING_SCHEME,
+  CHEMICAL_ENGINEERING_SCHEME,
+  CIVIL_ENGINEERING_SCHEME,
+  createSemestersFromScheme,
+} from "./departmentSchemes";
 
 export const GRADE_POINTS = {
   "A": 4.00,
@@ -241,3 +246,27 @@ export const FULL_8_SEMESTER_SE_TRANSCRIPT = {
     },
   ],
 };
+
+/**
+ * Complete 8-Semester Chemical Engineering dataset (131 CH)
+ */
+export const FULL_8_SEMESTER_CHE_TRANSCRIPT = {
+  semesters: createSemestersFromScheme(CHEMICAL_ENGINEERING_SCHEME, "che"),
+};
+
+/**
+ * Complete 8-Semester Civil Engineering dataset (136 CH)
+ */
+export const FULL_8_SEMESTER_CE_TRANSCRIPT = {
+  semesters: createSemestersFromScheme(CIVIL_ENGINEERING_SCHEME, "ce"),
+};
+
+/**
+ * Helper to get the official 8-semester transcript dataset for supported departments
+ */
+export function getOfficialTranscriptForDepartment(deptId) {
+  if (deptId === "se") return FULL_8_SEMESTER_SE_TRANSCRIPT;
+  if (deptId === "che") return FULL_8_SEMESTER_CHE_TRANSCRIPT;
+  if (deptId === "ce") return FULL_8_SEMESTER_CE_TRANSCRIPT;
+  return null;
+}

@@ -11,6 +11,24 @@ export const DEPARTMENTS = [
     description: "Department of Software Engineering, UET Peshawar",
   },
   {
+    id: "che",
+    name: "Chemical Engineering",
+    code: "CHE",
+    program: "BSc Chemical Engineering",
+    plan: "Chemical Engineering Major",
+    totalDegreeCredits: 131,
+    description: "Department of Chemical Engineering, UET Peshawar",
+  },
+  {
+    id: "ce",
+    name: "Civil Engineering",
+    code: "CE",
+    program: "BSc Civil Engineering",
+    plan: "Civil Engineering Major",
+    totalDegreeCredits: 136,
+    description: "Department of Civil Engineering, UET Peshawar",
+  },
+  {
     id: "cs",
     name: "Computer Science",
     code: "CS",
@@ -38,15 +56,6 @@ export const DEPARTMENTS = [
     description: "Department of Electrical Engineering, UET Peshawar",
   },
   {
-    id: "ce",
-    name: "Civil Engineering",
-    code: "CE",
-    program: "BSc Civil Engineering",
-    plan: "Civil Engineering Major",
-    totalDegreeCredits: 138,
-    description: "Department of Civil Engineering, UET Peshawar",
-  },
-  {
     id: "me",
     name: "Mechanical Engineering",
     code: "ME",
@@ -57,8 +66,7 @@ export const DEPARTMENTS = [
   },
 ];
 
-// Full 8-Semester Scheme of Studies for Software Engineering
-// Exactly matching the official UET Peshawar scheme provided in screenshots (Total = 135 CH)
+// Full 8-Semester Scheme of Studies for Software Engineering (Total = 135 CH)
 export const SOFTWARE_ENGINEERING_SCHEME = [
   {
     semesterIndex: 1,
@@ -196,6 +204,291 @@ export const SOFTWARE_ENGINEERING_SCHEME = [
     ],
   },
 ];
+
+// Full 8-Semester Scheme of Studies for Chemical Engineering (Total = 131 CH)
+// Exactly matching the official UET Peshawar scheme provided in prompt document
+export const CHEMICAL_ENGINEERING_SCHEME = [
+  {
+    semesterIndex: 1,
+    name: "Semester 1",
+    term: "Fall",
+    totalCredits: 16,
+    totalContactHours: 16,
+    courses: [
+      { code: "BSI-133", title: "Functional English", credits: 2.0, contactHours: 2 },
+      { code: "BSI-101", title: "Islamic Studies", credits: 2.0, contactHours: 2 },
+      { code: "CHE-144", title: "Chemical Engineering Principles-1", credits: 2.0, contactHours: 2 },
+      { code: "ME-104L", title: "Engineering Drawing and CAD Lab", credits: 1.0, contactHours: 1 },
+      { code: "BSI-118", title: "Inorganic & Organic Chemistry", credits: 2.0, contactHours: 2 },
+      { code: "BSI-118L", title: "Inorganic & Organic Chemistry Lab", credits: 1.0, contactHours: 1 },
+      { code: "BSI-111", title: "Linear Algebra", credits: 3.0, contactHours: 3 },
+      { code: "CHE-143", title: "Information & communication technology (ICT)", credits: 2.0, contactHours: 2 },
+      { code: "CHE-143L", title: "Information & communication technology (ICT)", credits: 1.0, contactHours: 1 },
+    ],
+  },
+  {
+    semesterIndex: 2,
+    name: "Semester 2",
+    term: "Spring",
+    totalCredits: 17,
+    totalContactHours: 17,
+    courses: [
+      { code: "BSI-117", title: "Physical & Analytical Chemistry", credits: 2.0, contactHours: 2 },
+      { code: "BSI-117L", title: "Physical & Analytical Chemistry Lab", credits: 1.0, contactHours: 1 },
+      { code: "BSI-110", title: "Pakistan Studies", credits: 2.0, contactHours: 2 },
+      { code: "BSI-122", title: "Calculus", credits: 3.0, contactHours: 3 },
+      { code: "BSI-181", title: "Applied Physics", credits: 2.0, contactHours: 2 },
+      { code: "BSI-181L", title: "Applied Physics Lab", credits: 1.0, contactHours: 1 },
+      { code: "BSI-143", title: "Communication Skills", credits: 2.0, contactHours: 2 },
+      { code: "ME-106L", title: "Engineering Workshop", credits: 1.0, contactHours: 1 },
+      { code: "CHE-101", title: "Chemical Process Industries", credits: 3.0, contactHours: 3 },
+    ],
+  },
+  {
+    semesterIndex: 3,
+    name: "Semester 3",
+    term: "Fall",
+    totalCredits: 17,
+    totalContactHours: 17,
+    courses: [
+      { code: "BSI-231", title: "Differential Equations", credits: 3.0, contactHours: 3 },
+      { code: "CHE-244", title: "Chemical Engg Principles-II", credits: 2.0, contactHours: 2 },
+      { code: "CHE-209", title: "Chemical Engineering Thermodynamics-I", credits: 2.0, contactHours: 2 },
+      { code: "EE-210", title: "Electrical Engineering", credits: 2.0, contactHours: 2 },
+      { code: "EE-210L", title: "Electrical Engineering Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-204", title: "Fluid Mechanics-I", credits: 2.0, contactHours: 2 },
+      { code: "CHE-205", title: "Particulate Technology", credits: 3.0, contactHours: 3 },
+      { code: "CHE-205L", title: "Particulate Technology Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-246", title: "Occupational Health and Safety", credits: 1.0, contactHours: 1 },
+    ],
+  },
+  {
+    semesterIndex: 4,
+    name: "Semester 4",
+    term: "Spring",
+    totalCredits: 16,
+    totalContactHours: 16,
+    courses: [
+      { code: "CHE-311", title: "Fluid Mechanics II", credits: 2.0, contactHours: 2 },
+      { code: "CHE-204L", title: "Fluid Mechanics Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-310", title: "Chemical Engineering Thermodynamics-II", credits: 3.0, contactHours: 3 },
+      { code: "CHE-209L", title: "Chemical Engineering Thermodynamics Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-207", title: "Fuels & Energy", credits: 2.0, contactHours: 2 },
+      { code: "CHE-207L", title: "Fuels & Energy Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-317", title: "Experimental Design and Analysis", credits: 2.0, contactHours: 2 },
+      { code: "CHE-206", title: "Mass Transfer", credits: 2.0, contactHours: 2 },
+      { code: "BSI-120", title: "Social Science Elective-I (Professional Ethics)/(Civics & Community Engagement)", credits: 2.0, contactHours: 2 },
+    ],
+  },
+  {
+    semesterIndex: 5,
+    name: "Semester 5",
+    term: "Fall",
+    totalCredits: 17,
+    totalContactHours: 17,
+    courses: [
+      { code: "CHE-312", title: "Separation Processes-I", credits: 3.0, contactHours: 3 },
+      { code: "CHE-312L", title: "Separation Processes Lab-I", credits: 1.0, contactHours: 1 },
+      { code: "CHE-319", title: "Chemical Reaction Engineering", credits: 3.0, contactHours: 3 },
+      { code: "CHE-319L", title: "Chemical Reaction Engineering Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-320", title: "Technical Writing & Presentation Skills", credits: 2.0, contactHours: 2 },
+      { code: "BSI-242", title: "Numerical Analysis", credits: 2.0, contactHours: 2 },
+      { code: "BSI-242L", title: "Numerical Analysis Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-351", title: "Heat Transfer", credits: 3.0, contactHours: 3 },
+      { code: "CHE-351L", title: "Heat Transfer Lab", credits: 1.0, contactHours: 1 },
+    ],
+  },
+  {
+    semesterIndex: 6,
+    name: "Semester 6",
+    term: "Spring",
+    totalCredits: 16,
+    totalContactHours: 16,
+    courses: [
+      { code: "CHE-456", title: "Process Modelling, Simulation & Optimization", credits: 3.0, contactHours: 3 },
+      { code: "CHE-456L", title: "Process Modelling, Simulation & Optimization Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-313", title: "Engineering Materials", credits: 2.0, contactHours: 2 },
+      { code: "CHE-430", title: "Environmental Engineering", credits: 2.0, contactHours: 2 },
+      { code: "CHE-430L", title: "Environmental Engineering Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-421", title: "Management Elective –I", credits: 2.0, contactHours: 2 },
+      { code: "CHE-427", title: "Transport Phenomena", credits: 3.0, contactHours: 3 },
+      { code: "CHE-315", title: "Engineering Economics", credits: 2.0, contactHours: 2 },
+    ],
+  },
+  {
+    semesterIndex: 7,
+    name: "Semester 7",
+    term: "Fall",
+    totalCredits: 17,
+    totalContactHours: 17,
+    courses: [
+      { code: "CHE-423", title: "Separation Processes-II", credits: 3.0, contactHours: 3 },
+      { code: "CHE-423L", title: "Separation Processes-II Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-432", title: "Management Elective-II", credits: 2.0, contactHours: 2 },
+      { code: "CHE-425", title: "Chemical Plant Design", credits: 3.0, contactHours: 3 },
+      { code: "CHE-424", title: "Depth Elective*-I", credits: 3.0, contactHours: 3 },
+      { code: "CHE-454", title: "Depth Elective*-II", credits: 2.0, contactHours: 2 },
+      { code: "CHE-458", title: "FYP (Part-I)", credits: 3.0, contactHours: 3 },
+    ],
+  },
+  {
+    semesterIndex: 8,
+    name: "Semester 8",
+    term: "Spring",
+    totalCredits: 15,
+    totalContactHours: 15,
+    courses: [
+      { code: "CHE-457", title: "Maintenance & Utility Engineering", credits: 2.0, contactHours: 2 },
+      { code: "CHE-429", title: "Depth Elective*-III", credits: 3.0, contactHours: 3 },
+      { code: "CHE-455", title: "Depth Elective*-IV", credits: 3.0, contactHours: 3 },
+      { code: "CHE-428", title: "Instrumentation & Process Control", credits: 3.0, contactHours: 3 },
+      { code: "CHE-428L", title: "Instrumentation & Process Control Lab", credits: 1.0, contactHours: 1 },
+      { code: "CHE-459", title: "FYP (Part-II)", credits: 3.0, contactHours: 3 },
+    ],
+  },
+];
+
+// Full 8-Semester Scheme of Studies for Civil Engineering (Total = 136 CH)
+// Exactly matching the official UET Peshawar scheme provided in prompt document
+export const CIVIL_ENGINEERING_SCHEME = [
+  {
+    semesterIndex: 1,
+    name: "Semester 1",
+    term: "Fall",
+    totalCredits: 17,
+    totalContactHours: 23,
+    courses: [
+      { code: "CE-122", title: "Civil Engineering Materials & Concrete Technology", credits: 4.0, contactHours: 6 },
+      { code: "EE-106L", title: "Electrical Technology", credits: 1.0, contactHours: 3 },
+      { code: "CE-112", title: "Engineering Drawing for Civil Engineers", credits: 3.0, contactHours: 5 },
+      { code: "BSI-133", title: "Functional English", credits: 3.0, contactHours: 3 },
+      { code: "BSI-101", title: "Islamic Studies", credits: 2.0, contactHours: 2 },
+      { code: "CE-123", title: "Linear Algebra", credits: 2.0, contactHours: 2 },
+      { code: "BSI-110", title: "Pak Studies", credits: 2.0, contactHours: 2 },
+    ],
+  },
+  {
+    semesterIndex: 2,
+    name: "Semester 2",
+    term: "Spring",
+    totalCredits: 17,
+    totalContactHours: 21,
+    courses: [
+      { code: "CE-120", title: "Building Construction Engineering", credits: 2.0, contactHours: 2 },
+      { code: "BSI-122", title: "Calculus", credits: 3.0, contactHours: 3 },
+      { code: "CE-107L", title: "Computer Programming for Civil Engineering", credits: 1.0, contactHours: 3 },
+      { code: "BSI-231", title: "Differential Equations", credits: 3.0, contactHours: 3 },
+      { code: "CE-117", title: "Engineering Mechanics", credits: 4.0, contactHours: 6 },
+      { code: "ME-191", title: "Mech. Tech. & Heavy Construction Machinery", credits: 2.0, contactHours: 2 },
+      { code: "BSI-120", title: "Professional Ethics", credits: 2.0, contactHours: 2 },
+    ],
+  },
+  {
+    semesterIndex: 3,
+    name: "Semester 3",
+    term: "Fall",
+    totalCredits: 18,
+    totalContactHours: 24,
+    courses: [
+      { code: "BSI-141", title: "Communication and Presentation Skills", credits: 2.0, contactHours: 2 },
+      { code: "CE-230L", title: "Computer Aided Drawing for Civil Engineering", credits: 1.0, contactHours: 3 },
+      { code: "CE-217", title: "Engineering Geology & Seismology", credits: 3.0, contactHours: 3 },
+      { code: "CE-210", title: "Introduction to Architecture & Urban Planning", credits: 2.0, contactHours: 2 },
+      { code: "CE-225", title: "Mechanics of Solids - I", credits: 4.0, contactHours: 6 },
+      { code: "BSI-351", title: "Probability & Statistics", credits: 3.0, contactHours: 3 },
+      { code: "CE-226", title: "Surveying - I", credits: 3.0, contactHours: 5 },
+    ],
+  },
+  {
+    semesterIndex: 4,
+    name: "Semester 4",
+    term: "Spring",
+    totalCredits: 17,
+    totalContactHours: 25,
+    courses: [
+      { code: "CE-206", title: "Fluid Mechanics - I", credits: 4.0, contactHours: 6 },
+      { code: "CE-228", title: "Mechanics of Solids - II", credits: 4.0, contactHours: 6 },
+      { code: "BSI-242", title: "Numerical Analysis", credits: 2.0, contactHours: 2 },
+      { code: "CE-215", title: "Structural Analysis - I", credits: 4.0, contactHours: 6 },
+      { code: "CE-229", title: "Surveying - II", credits: 3.0, contactHours: 5 },
+    ],
+  },
+  {
+    semesterIndex: 5,
+    name: "Semester 5",
+    term: "Fall",
+    totalCredits: 18,
+    totalContactHours: 28,
+    courses: [
+      { code: "CE-336L", title: "Building Information Modeling (BIM)", credits: 1.0, contactHours: 3 },
+      { code: "CE-338", title: "Civics and Community Engagements", credits: 2.0, contactHours: 4 },
+      { code: "CE-324", title: "Environmental Engineering - I", credits: 2.0, contactHours: 2 },
+      { code: "CE-330", title: "Fluid Mechanics - II", credits: 4.0, contactHours: 6 },
+      { code: "CE-331", title: "Geotechnical Engineering - I", credits: 3.0, contactHours: 5 },
+      { code: "CE-318L", title: "GIS & Remote Sensing Lab", credits: 1.0, contactHours: 3 },
+      { code: "CE-301", title: "Structural Analysis - II", credits: 3.0, contactHours: 3 },
+      { code: "CE-310", title: "Transportation Engineering - I", credits: 2.0, contactHours: 2 },
+    ],
+  },
+  {
+    semesterIndex: 6,
+    name: "Semester 6",
+    term: "Spring",
+    totalCredits: 18,
+    totalContactHours: 26,
+    courses: [
+      { code: "CE-333", title: "Environmental Engineering - II", credits: 3.0, contactHours: 5 },
+      { code: "CE-335", title: "Geotechnical Engineering - II", credits: 3.0, contactHours: 5 },
+      { code: "CE-303", title: "Hydraulics", credits: 2.0, contactHours: 2 },
+      { code: "CE-320", title: "Reinforced Concrete Design - I", credits: 3.0, contactHours: 3 },
+      { code: "CE-337", title: "Social Engineering for Sustainable Development", credits: 2.0, contactHours: 2 },
+      { code: "CE-334L", title: "Software App. in Structural and Geotechnical Engg", credits: 1.0, contactHours: 3 },
+      { code: "CE-311", title: "Transportation Engineering - II", credits: 4.0, contactHours: 6 },
+    ],
+  },
+  {
+    semesterIndex: 7,
+    name: "Semester 7",
+    term: "Fall",
+    totalCredits: 16,
+    totalContactHours: 24,
+    courses: [
+      { code: "CE-431", title: "Engineering Hydrology", credits: 2.0, contactHours: 2 },
+      { code: "CE-436", title: "Entrepreneurship", credits: 2.0, contactHours: 2 },
+      { code: "CE-411", title: "Final Year Design Project", credits: 3.0, contactHours: 9 },
+      { code: "CE-421", title: "Quantity Surveying & Civil Engineering Practice", credits: 3.0, contactHours: 5 },
+      { code: "CE-416", title: "Reinforced Concrete Design - II", credits: 3.0, contactHours: 3 },
+      { code: "CE-409", title: "Steel Structures", credits: 3.0, contactHours: 3 },
+    ],
+  },
+  {
+    semesterIndex: 8,
+    name: "Semester 8",
+    term: "Spring",
+    totalCredits: 15,
+    totalContactHours: 25,
+    courses: [
+      { code: "CE-406", title: "Construction Management and Engg. Economics", credits: 4.0, contactHours: 6 },
+      { code: "CE-411", title: "Final Year Design Project", credits: 3.0, contactHours: 9 },
+      { code: "CE-430", title: "Foundation Engineering", credits: 2.0, contactHours: 2 },
+      { code: "CE-432L", title: "Hydraulics and Hydrology Lab", credits: 1.0, contactHours: 3 },
+      { code: "CE-412", title: "Intro. to Str. Dynamics & Earthquake Engg", credits: 2.0, contactHours: 2 },
+      { code: "CE-402", title: "Irrigation Engineering", credits: 3.0, contactHours: 3 },
+    ],
+  },
+];
+
+// Map of departments with official schemes
+export const DEPARTMENT_SCHEMES = {
+  se: SOFTWARE_ENGINEERING_SCHEME,
+  che: CHEMICAL_ENGINEERING_SCHEME,
+  ce: CIVIL_ENGINEERING_SCHEME,
+};
+
+export function getDepartmentScheme(departmentId) {
+  return DEPARTMENT_SCHEMES[departmentId] || null;
+}
+
 // Helper to convert scheme to editable semesters state
 export function createSemestersFromScheme(scheme, departmentId = "se") {
   return scheme.map((sem, sIdx) => ({

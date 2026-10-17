@@ -31,6 +31,20 @@ function DepartmentSelector({ currentDepartmentId, onSelectDepartment, onClose }
               >
                 <div className="dept-card-top">
                   <span className="dept-code-pill">{dept.code}</span>
+                  {["se", "che", "ce"].includes(dept.id) && (
+                    <span
+                      style={{
+                        fontSize: "0.72rem",
+                        fontWeight: "700",
+                        background: "rgba(16, 185, 129, 0.14)",
+                        color: "#059669",
+                        padding: "2px 8px",
+                        borderRadius: "12px",
+                      }}
+                    >
+                      ✓ 8-Sem Scheme
+                    </span>
+                  )}
                   {isSelected && <span className="active-check">✓ Active</span>}
                 </div>
                 <h4 className="dept-name">{dept.name}</h4>
