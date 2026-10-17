@@ -1,0 +1,545 @@
+/* MAIN WRAPPER */
+
+.transcript-wrapper {
+  width: 100%;
+  background: #eef0ff;
+  padding: 30px 15px;
+  overflow-x: auto;
+}
+
+.transcript-paper-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+/* A4 PAPER */
+
+.transcript-sheet {
+  width: 210mm;
+  min-height: 297mm;
+  box-sizing: border-box;
+  padding: 15mm 13mm;
+  background: white;
+  color: black;
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  position: relative;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
+}
+
+/* UNIVERSITY HEADER */
+
+.uet-official-header {
+  text-align: center;
+}
+
+.uet-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.uet-location {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 3px 0 20px;
+}
+
+.uet-reg-no-line {
+  text-align: right;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+/* TRANSCRIPT HEADING */
+
+.uet-transcript-banner {
+  text-align: center;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  font-size: 16px;
+  padding: 4px;
+  margin-bottom: 10px;
+}
+
+/* STUDENT INFORMATION */
+
+.uet-student-details-block {
+  font-size: 11px;
+  line-height: 1.7;
+  margin-bottom: 12px;
+}
+
+.uet-meta-line {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* TWO COLUMN LAYOUT */
+
+.uet-two-column-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12mm;
+  width: 100%;
+  align-items: start;
+}
+
+.uet-transcript-column {
+  width: 100%;
+  min-width: 0;
+}
+
+/* COLUMN HEADERS */
+
+.uet-col-headers-row {
+  display: grid;
+  grid-template-columns: 17% 58% 12% 13%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  font-weight: bold;
+  padding: 4px 2px;
+  font-size: 10px;
+}
+
+.uet-col-headers-row span:nth-child(3),
+.uet-col-headers-row span:nth-child(4) {
+  text-align: center;
+}
+
+/* SEMESTER BOX */
+
+.uet-semester-box {
+  width: 100%;
+  margin-top: 12px;
+  border: 1px solid black;
+  box-sizing: border-box;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.uet-semester-title-banner {
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 5px 2px;
+  border-bottom: 1px solid black;
+}
+
+/* COURSE TABLE */
+
+.uet-courses-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 9px;
+}
+
+.uet-courses-table td {
+  border-right: 1px solid black;
+  border-bottom: 1px solid #ddd;
+  padding: 4px 3px;
+  height: 22px;
+  box-sizing: border-box;
+}
+
+.uet-courses-table td:last-child {
+  border-right: none;
+}
+
+.uet-td-code {
+  white-space: nowrap;
+  font-size: 9px;
+}
+
+.uet-td-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uet-td-ch,
+.uet-td-grade {
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* SEMESTER SUMMARY */
+
+.uet-semester-summary-table {
+  border-top: 1px solid black;
+  padding: 5px 3px;
+  font-size: 9px;
+  font-weight: bold;
+}
+
+.summary-stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 3px;
+  padding: 2px 0;
+}
+
+.summary-stat-row span {
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* FOOTER */
+
+.uet-transcript-footer {
+  position: absolute;
+  bottom: 15mm;
+  left: 13mm;
+  right: 13mm;
+  font-size: 10px;
+}
+
+.uet-embossed-stamp-line {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.uet-signatures-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.uet-sig-left {
+  flex: 1;
+}
+
+.uet-sig-right {
+  flex: 1;
+  text-align: center;
+}
+
+.uet-sig-right h4 {
+  font-size: 12px;
+  margin-bottom: 8px;
+}
+
+.sig-item {
+  margin-bottom: 8px;
+}
+
+.uet-rectification-note {
+  font-weight: bold;
+  font-size: 9px;
+  margin-top: 15px;
+}
+
+/* PRINT SETTINGS */
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+
+  html,
+  body,
+  #root {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .transcript-wrapper {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: white !important;
+    overflow: visible !important;
+  }
+
+  .transcript-paper-container {
+    display: block !important;
+  }
+
+  .transcript-sheet {
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    padding: 15mm 13mm !important;
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .transcript-sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .uet-semester-box {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  button,
+  .navbar,
+  .sidebar,
+  .dashboard-header {
+    display: none !important;
+  }
+}
+
+/* Compact transcript tables */
+
+.uet-semester-box {
+  margin-top: 5px;
+}
+
+.uet-semester-title-banner {
+  font-size: 10px;
+  padding: 2px;
+}
+
+.uet-courses-table {
+  font-size: 8px;
+}
+
+.uet-courses-table td {
+  height: 15px;
+  padding: 2px;
+}
+
+.uet-semester-summary-table {
+  padding: 2px;
+  font-size: 8px;
+}
+
+.summary-stat-row {
+  padding: 1px 0;
+}
+
+.uet-two-column-layout {
+  gap: 8mm;
+}
+
+
+
+
+/* Keep semester tables at the top */
+.uet-two-column-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8mm;
+  align-items: start;
+}
+
+/* Keep tables together without stretching */
+.uet-transcript-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: 8px;
+  height: auto;
+  min-height: 0;
+}
+
+/* Semester table size */
+.uet-semester-box {
+  flex: 0 0 auto;
+  margin-top: 0;
+  height: auto;
+}
+
+/* Prevent unwanted stretching */
+.uet-courses-table {
+  height: auto;
+}
+
+
+/* ========================================
+   FINAL TRANSCRIPT LAYOUT FIX
+======================================== */
+
+/* A4 Paper */
+.transcript-sheet {
+  width: 210mm;
+  height: 297mm;
+  min-height: 297mm;
+  padding: 10mm 10mm;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Two equal columns */
+.uet-two-column-layout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6mm;
+  align-items: start;
+  padding-bottom: 0;
+}
+
+/* Semester columns */
+.uet-transcript-column {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: flex-start;
+  height: auto;
+}
+
+/* Semester boxes */
+.uet-semester-box {
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+/* Semester title */
+.uet-semester-title-banner {
+  font-size: 10px;
+  padding: 2px;
+  line-height: 14px;
+}
+
+/* Course table */
+.uet-courses-table {
+  width: 100%;
+  font-size: 8px;
+  border-collapse: collapse;
+}
+
+/* Smaller course rows */
+.uet-courses-table td {
+  height: 13px;
+  padding: 1px 2px;
+  line-height: 11px;
+}
+
+/* Summary */
+.uet-semester-summary-table {
+  padding: 2px;
+  font-size: 8px;
+}
+
+.summary-stat-row {
+  padding: 1px 0;
+  line-height: 12px;
+}
+
+/* Reduce header height */
+.uet-title {
+  font-size: 18px;
+}
+
+.uet-location {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.uet-student-details-block {
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+/* Footer reserved at bottom */
+.uet-transcript-footer {
+  position: absolute;
+  bottom: 10mm;
+  left: 10mm;
+  right: 10mm;
+  background: white;
+  font-size: 9px;
+  z-index: 2;
+}
+
+/* Footer spacing */
+.uet-embossed-stamp-line {
+  margin-bottom: 8px;
+}
+
+.sig-item {
+  margin-bottom: 4px;
+}
+
+.uet-rectification-note {
+  margin-top: 7px;
+}
+
+/* Print */
+@media print {
+  .transcript-sheet {
+    width: 210mm !important;
+    height: 297mm !important;
+    min-height: 297mm !important;
+    padding: 10mm !important;
+    overflow: hidden !important;
+  }
+
+  .uet-transcript-footer {
+    bottom: 10mm !important;
+    left: 10mm !important;
+    right: 10mm !important;
+  }
+}
+
+
+/* ===== FIX SEMESTER TABLE OVERFLOW ===== */
+
+/* Reduce space between semesters */
+.uet-transcript-column {
+  gap: 3px !important;
+}
+
+/* Compact semester boxes */
+.uet-semester-box {
+  margin: 0 !important;
+}
+
+/* Smaller semester headings */
+.uet-semester-title-banner {
+  padding: 1px 2px !important;
+  font-size: 10px !important;
+  line-height: 12px !important;
+}
+
+/* Reduce course row height */
+.uet-courses-table td {
+  height: 11px !important;
+  padding: 0 2px !important;
+  line-height: 11px !important;
+  font-size: 8px !important;
+}
+
+/* Compact semester summary */
+.uet-semester-summary-table {
+  padding: 1px 2px !important;
+  font-size: 8px !important;
+}
+
+.summary-stat-row {
+  padding: 0 !important;
+  line-height: 11px !important;
+}
+
+/* Reduce space used by header */
+.uet-location {
+  margin-bottom: 5px !important;
+}
+
+.uet-transcript-banner {
+  margin-bottom: 5px !important;
+}
+
+.uet-student-details-block {
+  margin-bottom: 5px !important;
+}
+
+/* Keep footer at bottom */
+.uet-transcript-footer {
+  bottom: 8mm !important;
+}

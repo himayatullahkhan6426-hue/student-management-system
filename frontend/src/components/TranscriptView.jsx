@@ -1,8 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef } from "react";
+import "./TranscriptView.css";
 
-function TranscriptView({ studentInfo, semesters, onPrint }) {
-  const [layoutMode, setLayoutMode] = useState("exact"); // "exact" (460px left aligned as in photo) or "full"
+const FIRST_PAGE_HEIGHT = 660;
+const OTHER_PAGE_HEIGHT = 900;
+const MAX_TABLES_PER_COLUMN = 4;
+
+const ROW_HEIGHT = 22;
+const SEMESTER_HEADER_HEIGHT = 30;
+const SUMMARY_HEIGHT = 55;
+const SEMESTER_GAP = 16;
+
+function TranscriptView({ studentInfo = {}, semesters = [], onPrint }) {
   const transcriptRef = useRef(null);
+
+  const formatNumber = (value) => {
+    const number = Number(value);
+    return Number.isFinite(number) ? number.toFixed(2) : "0.00";
+  };
 
   const handlePrint = () => {
     if (onPrint) {
@@ -12,187 +26,244 @@ function TranscriptView({ studentInfo, semesters, onPrint }) {
     }
   };
 
-  return (
-    <div className="transcript-wrapper">
+  // Calculate approximate height of each semester
+  const getSemesterHeight = (semester) => {
+    const subjects = semester.subjects || [];
 
-      {/* The Printable Official Transcript Document */}
-      <div className="transcript-paper-container">
-        <div
-          className={`transcript-sheet ${layoutMode === "exact" ? "exact-photo-layout" : "full-layout"}`}
-          ref={transcriptRef}
-          id="printable-transcript"
-        >
-          {/* Top Institution Header */}
-          <header className="uet-official-header">
-            <h1 className="uet-title">University of Engineering & Technology</h1>
-            <h2 className="uet-location">Peshawar, Pakistan</h2>
+    return (
+      SEMESTER_HEADER_HEIGHT +
+      subjects.length * ROW_HEIGHT +
+      SUMMARY_HEIGHT +
+      SEMESTER_GAP
+    );
+  };
 
-            <div className="uet-reg-no-line">
-              <span className="uet-reg-label">Registration No:</span>
-              <span className="uet-reg-val">{studentInfo.registrationNo || "No Data"}</span>
-            </div>
-          </header>
+  // Automatically distribute semesters between left and right columns
+const pages = useMemo(() => {
+  const result = [];
 
-          {/* Horizontal Line */}
-          <div className="uet-divider-line"></div>
+  for (let i = 0; i < semesters.length; i += 8) {
+    const pageSemesters = semesters.slice(i, i + 8);
 
-          {/* TRANSCRIPT Title */}
-          <div className="uet-transcript-banner">
-            <h3 className="uet-transcript-heading">TRANSCRIPT</h3>
-          </div>
+    result.push({
+      left: pageSemesters.slice(0, 4),
+      right: pageSemesters.slice(4, 8),
+    });
+  }
 
-          {/* Horizontal Line */}
-          <div className="uet-divider-line"></div>
+  return result.length
+    ? result
+    : [{ left: [], right: [] }];
+}, [semesters]);
 
-          {/* Student Information Section */}
-          <div className="uet-student-details-block">
-            <div className="uet-meta-line row-1">
-              <div className="meta-col-left">
-                <span className="lbl">Student's Name:</span>
-                <span className="val">{studentInfo.studentName || "No Data"}</span>
-              </div>
-              <div className="meta-col-right">
-                <span className="lbl">Father's Name:</span>
-                <span className="val">{studentInfo.fatherName || "No Data"}</span>
-              </div>
-            </div>
+  const SemesterTable = ({ semester, index }) => (
+    <div className="uet-semester-box">
+      <div className="uet-semester-title-banner">
+        {semester.name || `Semester ${index + 1}`}
+      </div>
 
-            <div className="uet-meta-line row-2">
-              <div className="meta-col-left">
-                <span className="lbl">Program:</span>
-                <span className="val">{studentInfo.program || "No Data"}</span>
-              </div>
-            </div>
+      <table className="uet-courses-table">
+        <colgroup>
+          <col style={{ width: "17%" }} />
+          <col style={{ width: "58%" }} />
+          <col style={{ width: "12%" }} />
+          <col style={{ width: "13%" }} />
+        </colgroup>
 
-            <div className="uet-meta-line row-3">
-              <div className="meta-col-left">
-                <span className="lbl">Plan:</span>
-                <span className="val">{studentInfo.plan || "No Data"}</span>
-              </div>
-            </div>
-          </div>
+        <tbody>
+          {(semester.subjects || []).map((subject, subjectIndex) => (
+            <tr key={subject.id || subjectIndex}>
+              <td className="uet-td-code">
+                {subject.code || ""}
+              </td>
 
-          {/* Horizontal Line */}
-          <div className="uet-divider-line"></div>
+              <td className="uet-td-title">
+                {subject.title || ""}
+              </td>
 
-          {/* Main Courses Area */}
-          <div className="uet-courses-wrapper">
-            {/* Column Headers */}
-            <div className="uet-col-headers-row">
-              <span className="th-col th-code">Code</span>
-              <span className="th-col th-title">Title</span>
-              <span className="th-col th-ch">CH</span>
-              <span className="th-col th-grade">Grade</span>
-            </div>
+              <td className="uet-td-ch">
+                {formatNumber(subject.credits)}
+              </td>
 
-            {/* Semester Table Blocks */}
-            <div className="uet-semesters-list">
-              {semesters.map((sem, sIdx) => (
-                <div key={sem.id || sIdx} className="uet-semester-box">
-                  {/* Semester Term Name */}
-                  <div className="uet-semester-title-banner">
-                    {sem.name || `Semester ${sIdx + 1}`}
-                  </div>
+              <td className="uet-td-grade">
+                {subject.grade || ""}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-                  {/* Course Lines with Vertical Dividing Lines */}
-                  <table className="uet-courses-table">
-                    <tbody>
-                      {(sem.subjects || []).map((sub, subIdx) => (
-                        <tr key={sub.id || subIdx} className="uet-course-row">
-                          <td className="uet-td uet-td-code">{sub.code || ""}</td>
-                          <td className="uet-td uet-td-title">{sub.title || ""}</td>
-                          <td className="uet-td uet-td-ch">
-                            {sub.credits !== undefined && sub.credits !== null && sub.credits !== ""
-                              ? parseFloat(sub.credits).toFixed(2)
-                              : "0.00"}
-                          </td>
-                          <td className="uet-td uet-td-grade">{sub.grade || ""}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-
-                  {/* Semester Calculations Summary Box */}
-                  <div className="uet-semester-summary-table">
-                    <div className="summary-stat-row">
-                      <div className="stat-cell">
-                        <span className="sum-tag">SCH:</span>
-                        <span className="sum-num">{(sem.sch || 0).toFixed(2)}</span>
-                      </div>
-                      <div className="stat-cell">
-                        <span className="sum-tag">SGP:</span>
-                        <span className="sum-num">{(sem.sgp || 0).toFixed(2)}</span>
-                      </div>
-                      <div className="stat-cell">
-                        <span className="sum-tag">SGPA:</span>
-                        <span className="sum-num">{(sem.sgpa || 0).toFixed(2)}</span>
-                      </div>
-                    </div>
-
-                    <div className="summary-stat-row">
-                      <div className="stat-cell">
-                        <span className="sum-tag">CCH:</span>
-                        <span className="sum-num">{(sem.cch || 0).toFixed(2)}</span>
-                      </div>
-                      <div className="stat-cell">
-                        <span className="sum-tag">CGP:</span>
-                        <span className="sum-num">{(sem.cgp || 0).toFixed(2)}</span>
-                      </div>
-                      <div className="stat-cell">
-                        <span className="sum-tag">CGPA:</span>
-                        <span className="sum-num">{(sem.cgpa || 0).toFixed(2)}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Official Verification & Signatures Footer */}
-          <footer className="uet-transcript-footer">
-            <p className="uet-embossed-stamp-line">
-              "The Official Transcript carries the embossed stamp of the University"
-            </p>
-
-            <div className="uet-signatures-container">
-              <div className="uet-sig-left">
-                <div className="sig-item">
-                  <span className="sig-label">Transcript Prepared By:</span>
-                  <span className="sig-line">
-                    {studentInfo.preparedBy || "___________________________"}
-                  </span>
-                </div>
-
-                <div className="sig-item">
-                  <span className="sig-label">Transcript Checked By:</span>
-                  <span className="sig-line">
-                    {studentInfo.checkedBy || "___________________________"}
-                  </span>
-                </div>
-
-                <div className="sig-item date-line">
-                  <span className="sig-label">Date of issue:</span>
-                  <span className="sig-date-val">{studentInfo.issueDate || "__/__/202__"}</span>
-                </div>
-
-                <p className="uet-rectification-note">
-                  "Errors and Omissions are subject to subsequent rectification"
-                </p>
-              </div>
-
-              <div className="uet-sig-right">
-                <h4 className="uet-controller-heading">
-                  {studentInfo.controllerTitle || "Controller of Examinations"}
-                </h4>
-                <div className="uet-decl-date-box">
-                  <span className="decl-txt">Result Declaration Date :             </span>
-                  <span className="decl-val">{studentInfo.resultDeclarationDate || ""}</span>
-                </div>
-              </div>
-            </div>
-          </footer>
+      <div className="uet-semester-summary-table">
+        <div className="summary-stat-row">
+          <span>SCH: {formatNumber(semester.sch)}</span>
+          <span>SGP: {formatNumber(semester.sgp)}</span>
+          <span>SGPA: {formatNumber(semester.sgpa)}</span>
         </div>
+
+        <div className="summary-stat-row">
+          <span>CCH: {formatNumber(semester.cch)}</span>
+          <span>CGP: {formatNumber(semester.cgp)}</span>
+          <span>CGPA: {formatNumber(semester.cgpa)}</span>
+        </div>
+      </div>
+    </div>
+  );
+
+  const ColumnHeaders = () => (
+    <div className="uet-col-headers-row">
+      <span>Code</span>
+      <span>Title</span>
+      <span>CH</span>
+      <span>Grade</span>
+    </div>
+  );
+
+  return (
+    <div className="transcript-wrapper" ref={transcriptRef}>
+      <div className="transcript-paper-container">
+
+        {pages.map((page, pageIndex) => (
+          <div
+            key={pageIndex}
+            className="transcript-sheet"
+            id={
+              pageIndex === 0
+                ? "printable-transcript"
+                : undefined
+            }
+          >
+
+            {/* Header only on first page */}
+            {pageIndex === 0 && (
+              <>
+                <header className="uet-official-header">
+                  <h1 className="uet-title">
+                    University of Engineering & Technology
+                  </h1>
+
+                  <h2 className="uet-location">
+                    Peshawar, Pakistan
+                  </h2>
+
+                  <div className="uet-reg-no-line">
+                    <strong>Registration No: </strong>
+                    {studentInfo.registrationNo || "No Data"}
+                  </div>
+                </header>
+
+                <div className="uet-transcript-banner">
+                  TRANSCRIPT
+                </div>
+
+                <div className="uet-student-details-block">
+                  <div className="uet-meta-line">
+                    <div>
+                      <strong>Student's Name: </strong>
+                      {studentInfo.studentName || "No Data"}
+                    </div>
+
+                    <div>
+                      <strong>Father's Name: </strong>
+                      {studentInfo.fatherName || "No Data"}
+                    </div>
+                  </div>
+
+                  <div>
+                    <strong>Program: </strong>
+                    {studentInfo.program || "No Data"}
+                  </div>
+
+                  <div>
+                    <strong>Plan: </strong>
+                    {studentInfo.plan || "No Data"}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* TWO COLUMN TRANSCRIPT */}
+            <div className="uet-two-column-layout">
+
+              {/* LEFT SIDE */}
+              <div className="uet-transcript-column">
+                <ColumnHeaders />
+
+                {page.left.map((semester, index) => (
+                  <SemesterTable
+                    key={semester.id || index}
+                    semester={semester}
+                    index={index}
+                  />
+                ))}
+              </div>
+
+              {/* RIGHT SIDE */}
+              <div className="uet-transcript-column">
+                <ColumnHeaders />
+
+                {page.right.map((semester, index) => (
+                  <SemesterTable
+                    key={semester.id || index}
+                    semester={semester}
+                    index={page.left.length + index}
+                  />
+                ))}
+              </div>
+
+            </div>
+
+            {/* Footer on last page */}
+            {pageIndex === pages.length - 1 && (
+              <footer className="uet-transcript-footer">
+
+                <p className="uet-embossed-stamp-line">
+                  "The Official Transcript carries the embossed
+                  stamp of the University"
+                </p>
+
+                <div className="uet-signatures-container">
+
+                  <div className="uet-sig-left">
+                    <div className="sig-item">
+                      <strong>Transcript Prepared By: </strong>
+                      {studentInfo.preparedBy || "________________"}
+                    </div>
+
+                    <div className="sig-item">
+                      <strong>Transcript Checked By: </strong>
+                      {studentInfo.checkedBy || "________________"}
+                    </div>
+
+                    <div className="sig-item">
+                      <strong>Date of issue: </strong>
+                      {studentInfo.issueDate || "__/__/202__"}
+                    </div>
+
+                    <p className="uet-rectification-note">
+                      "Errors and Omissions are subject to
+                      subsequent rectification"
+                    </p>
+                  </div>
+
+                  <div className="uet-sig-right">
+                    <h4>
+                      {studentInfo.controllerTitle ||
+                        "Controller of Examinations"}
+                    </h4>
+
+                    <div>
+                      Result Declaration Date:{" "}
+                      {studentInfo.resultDeclarationDate || ""}
+                    </div>
+                  </div>
+
+                </div>
+              </footer>
+            )}
+
+          </div>
+        ))}
+
       </div>
     </div>
   );
