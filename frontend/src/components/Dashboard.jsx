@@ -13,6 +13,7 @@ import {
   calculateAllSemesters,
 } from "../utils/gradeCalculations";
 import { DEPARTMENTS, createSemestersFromScheme, SOFTWARE_ENGINEERING_SCHEME } from "../utils/departmentSchemes";
+import html2pdf from "html2pdf.js";
 
 const API_URL = "https://student-management-system-d4cj.onrender.com";
 
@@ -29,6 +30,7 @@ function Dashboard({ user, handleLogout }) {
   const [activeTab, setActiveTab] = useState("semesters");
   const [cloudStatus, setCloudStatus] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   // User-isolated storage keys
   const userId = user?.id || "guest";
@@ -197,6 +199,103 @@ function Dashboard({ user, handleLogout }) {
     window.print();
   };
 
+  const handleDownloadTranscript = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+
+    try {
+      const container = document.querySelector(".transcript-paper-container");
+      if (!container) {
+        alert("Transcript element not found.");
+        setIsDownloading(false);
+        return;
+      }
+
+      // Safe registration number and name for filename
+      const rawReg = studentInfo?.registrationNo || user?.email || "Student";
+      const cleanReg = rawReg.trim().replace(/[^a-zA-Z0-9_-]/g, "_");
+      const cleanName = (studentInfo?.studentName || user?.name || "Student").trim().replace(/[^a-zA-Z0-9_-]/g, "_");
+      const filename = `${cleanName}_Transcript_${cleanReg}.pdf`;
+
+      // Configure html2pdf options
+      const opt = {
+        margin: 0,
+        filename: filename,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: {
+          scale: 2, // 2x high resolution
+          useCORS: true,
+          logging: false,
+          letterRendering: true,
+          scrollY: 0,
+          scrollX: 0,
+          windowWidth: 1200,
+        },
+        jsPDF: {
+          unit: "mm",
+          format: "a4",
+          orientation: "portrait",
+        },
+        pagebreak: {
+          mode: ["avoid-all", "css", "legacy"],
+          after: ".transcript-sheet",
+        },
+      };
+
+      // To ensure mobile responsive scaling does not affect PDF layout,
+      // clone the transcript container into an isolated off-screen node at full A4 desktop width:
+      const clone = container.cloneNode(true);
+      clone.style.width = "794px";
+      clone.style.maxWidth = "794px";
+      clone.style.margin = "0";
+      clone.style.padding = "0";
+      clone.style.gap = "0";
+      clone.style.background = "#ffffff";
+
+      const sheets = clone.querySelectorAll(".transcript-sheet");
+      sheets.forEach((sheet, idx) => {
+        sheet.style.transform = "none";
+        sheet.style.boxShadow = "none";
+        sheet.style.margin = "0";
+        sheet.style.width = "210mm";
+        sheet.style.minHeight = "297mm";
+        sheet.style.height = "297mm";
+        sheet.style.boxSizing = "border-box";
+        if (idx < sheets.length - 1) {
+          sheet.style.pageBreakAfter = "always";
+          sheet.style.breakAfter = "page";
+        } else {
+          sheet.style.pageBreakAfter = "auto";
+          sheet.style.breakAfter = "auto";
+        }
+      });
+
+      const offscreen = document.createElement("div");
+      offscreen.style.position = "fixed";
+      offscreen.style.left = "-99999px";
+      offscreen.style.top = "0";
+      offscreen.style.width = "794px";
+      offscreen.style.background = "#ffffff";
+      offscreen.style.zIndex = "-99999";
+      offscreen.appendChild(clone);
+      document.body.appendChild(offscreen);
+
+      try {
+        await html2pdf().set(opt).from(clone).save();
+      } finally {
+        if (document.body.contains(offscreen)) {
+          document.body.removeChild(offscreen);
+        }
+      }
+    } catch (err) {
+      console.error("Error generating PDF:", err);
+      // Fallback: window.print()
+      window.print();
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   // Get current cumulative stats
   const lastSem = calculatedSemesters[calculatedSemesters.length - 1] || {};
   const currentCGPA = lastSem.cgpa !== undefined ? lastSem.cgpa : 0;
@@ -281,15 +380,68 @@ function Dashboard({ user, handleLogout }) {
         {/* 1. Official Transcript View */}
         {activeTab === "transcript" && (
           <div className="transcript-tab-content">
-            {/* Direct Big Print / Save as PDF Button covering the full area */}
-            <button
-              type="button"
-              className="big-print-btn no-print"
-              onClick={handlePrint}
-              title="Open print dialog to print or save as PDF"
-            >
-              Print / Save as PDF
-            </button>
+            {/* Dual Action Banner: Download Transcript & Print Transcript */}
+            <div className="transcript-actions-banner no-print">
+              <button
+                type="button"
+                className="transcript-action-btn download-btn"
+                onClick={handleDownloadTranscript}
+                disabled={isDownloading}
+                title="Automatically download official transcript as PDF"
+              >
+                {isDownloading ? (
+                  <>
+                    <span className="btn-spinner" aria-hidden="true" />
+                    <span>Downloading Transcript...</span>
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      className="btn-action-icon"
+                      width="22"
+                      height="22"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>Download Transcript</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                className="transcript-action-btn print-btn-blue"
+                onClick={handlePrint}
+                title="Open print dialog to print transcript"
+              >
+                <svg
+                  className="btn-action-icon"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <polyline points="6 9 6 2 18 2 18 9" />
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                  <rect x="6" y="14" width="12" height="8" />
+                </svg>
+                <span>Print Transcript</span>
+              </button>
+            </div>
             <TranscriptView
               studentInfo={studentInfo}
               semesters={calculatedSemesters}
